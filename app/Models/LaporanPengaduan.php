@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class LaporanPengaduan extends Model
 {
-    /** @use HasFactory<\Database\Factories\LaporanPengaduanFactory> */
     use HasFactory;
-    
+
     protected $fillable = [
         'siswa_id',
         'kategori_id',

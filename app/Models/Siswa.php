@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\LaporanPengaduan;
 
 class Siswa extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\SiswaFactory> */
     use HasFactory, Notifiable;
 
     protected $fillable = [
@@ -25,14 +25,14 @@ class Siswa extends Authenticatable
     protected function nama(): Attribute
     {
         return Attribute::make(
-            set: fn($value) => ucwords(strtolower(trim($value)))
+            set: fn ($value) => ucwords(strtolower(trim($value)))
         );
     }
 
-    public function kelas(): Attribute
+    protected function kelas(): Attribute
     {
         return Attribute::make(
-            set: fn($value) => ucwords(strtolower(trim($value)))
+            set: fn ($value) => strtoupper(trim($value))
         );
     }
 

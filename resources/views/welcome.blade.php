@@ -12,21 +12,20 @@
                 laboratorium, toilet, dan fasilitas pendukung lainnya
                 secara mudah dan terstruktur.
             </p>
-        
+
             @guest('siswa')
-            <div class="d-flex justify-content-center gap-2 mt-4">
-                <a href="{{ route('siswa.login') }}"
-                   class="btn btn-primary btn-lg">
-                    Masuk Siswa
-                </a>
-            
-                <a href="{{ route('siswa.register') }}"
-                   class="btn btn-outline-secondary btn-lg">
-                    Daftar
-                </a>
-            </div>
+                <div class="d-flex justify-content-center gap-2 mt-4">
+                    <a href="{{ route('siswa.login') }}"
+                        class="btn btn-primary btn-lg">
+                        Masuk Siswa
+                    </a>
+                    <a href="{{ route('siswa.register') }}"
+                        class="btn btn-outline-secondary btn-lg">
+                        Daftar
+                    </a>
+                </div>
             @endguest
-        
+
         </div>
     </div>
 @endsection

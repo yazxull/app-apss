@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Admin;
 use App\Models\LaporanPengaduan;
-use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Aspirasi>
@@ -19,14 +19,14 @@ class AspirasiFactory extends Factory
     public function definition(): array
     {
         return [
-            'laporan_id'  => LaporanPengaduan::factory(),
-            'admin_id'    => Admin::factory(),
-            'status'      => $this->faker->randomElement([
+            'laporan_id' => \App\Models\LaporanPengaduan::factory(),
+            'admin_id' => \App\Models\Admin::factory(),
+            'status' => $this->faker->randomElement([
                 'menunggu',
                 'proses',
                 'selesai',
             ]),
-            'feedback'    => $this->faker->optional()->numberBetween(1, 5),
+            'feedback' => $this->faker->optional()->numberBetween(1, 5),
         ];
     }
 }

@@ -17,8 +17,8 @@ class SiswaFactory extends Factory
     public function definition(): array
     {
         return [
-            'nis'   => $this->faker->unique()->numerify('##########'),
-            'nama'  => $this->faker->name(),
+            'nis' => $this->faker->unique()->numerify('##########'),
+            'nama' => $this->faker->name(),
             'kelas' => $this->faker->randomElement([
                 'X PPLG 1',
                 'XI PPLG 1',

@@ -7,24 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Aspirasi extends Model
 {
-    /** @use HasFactory<\Database\Factories\AspirasiFactory> */
-    use HasFactory;
+   use HasFactory;
 
-    protected $fillable = [
-        'laporan_id',
-        'admin_id',
-        'status',
-        'feedback',
-    ];
+   protected $fillable = [
+      'laporan_id',
+      'admin_id',
+      'status',
+      'feedback',
+   ];
 
-    public function laporan()
-    {
-        return $this->belongsTo(LaporanPengaduan::class, 'laporan_id');
-    }
+   public function laporan()
+   {
+      return $this->belongsTo(LaporanPengaduan::class, 'laporan_id');
+   }
 
-    public function admin()
-    {
-        return $this->belongsTo(Admin::class);
-    }
-
+   public function admin()
+   {
+      return $this->belongsTo(Admin::class);
+   }
 }

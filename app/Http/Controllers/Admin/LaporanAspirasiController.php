@@ -64,7 +64,7 @@ class LaporanAspirasiController extends Controller
     public function show(LaporanPengaduan $laporan)
     {
         // Memuat relasi yang diperlukan
-        $laporan->load(['kategori', 'aspirasi']);
+        $laporan->load(['kategori', 'aspirasi', 'komentar.sender']);
 
         $kepuasan = [
             1 => 'Tidak Puas',
@@ -103,5 +103,34 @@ class LaporanAspirasiController extends Controller
         return redirect()
             ->route('admin.laporan.show', $laporan->id)
             ->with('success', 'Status aspirasi berhasil diperbarui.');
+    }
+
+    public function cetakPdf(Request $request)
+    {
+        $bulan = $request->query('bulan', date('m'));
+        $tahun = $request->query('tahun', date('Y'));
+
+        $laporan = LaporanPengaduan::with(['kategori', 'siswa', 'aspirasi'])
+            ->whereMonth('created_at', $bulan)
+            ->whereYear('created_at', $tahun)
+            ->get();
+
+        return view('admin.laporan.cetak', compact('laporan', 'bulan', 'tahun'));
+    }
+
+    public function storeKomentar(Request $request, LaporanPengaduan $laporan)
+    {
+        $request->validate([
+            'pesan' => 'required|string|max:1000'
+        ]);
+
+        \App\Models\KomentarLaporan::create([
+            'laporan_id'  => $laporan->id,
+            'sender_type' => 'admin',
+            'sender_id'   => Auth::guard('admin')->id(),
+            'pesan'       => $request->pesan,
+        ]);
+
+        return back()->with('success', 'Komentar berhasil dikirim');
     }
 }

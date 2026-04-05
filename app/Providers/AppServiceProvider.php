@@ -21,5 +21,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+
+        \Illuminate\Database\Eloquent\Relations\Relation::enforceMorphMap([
+            'admin' => 'App\Models\Admin',
+            'siswa' => 'App\Models\Siswa',
+        ]);
     }
 }

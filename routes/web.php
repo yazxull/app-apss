@@ -34,6 +34,7 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
         Route::singleton('/akun', AkunController::class)->except('show');
         Route::post('laporan/{aspirasi}/feedback', [LaporanPengaduanController::class, 'feedback'])
             ->name('laporan.feedback');
+        Route::post('laporan/{laporan}/komentar', [LaporanPengaduanController::class, 'storeKomentar'])->name('laporan.komentar');
         Route::resource('laporan', LaporanPengaduanController::class)->except(['index', 'edit', 'update']);
     });
 });
@@ -55,6 +56,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/akun', [AdminAkunController::class, 'updateProfile']);
         Route::post('/akun/password', [AdminAkunController::class, 'updatePassword'])->name('akun.password');
         Route::resource('kategori', KategoriController::class);
+        
+        Route::get('laporan/cetak', [LaporanAspirasiController::class, 'cetakPdf'])->name('laporan.cetak');
+        Route::post('laporan/{laporan}/komentar', [LaporanAspirasiController::class, 'storeKomentar'])->name('laporan.komentar');
         Route::resource('laporan', LaporanAspirasiController::class)
         ->only(['index', 'show', 'update']);
     });

@@ -3,15 +3,7 @@
         <table class="table table-borderless">
             <tr>
                 <th width="200">Nama Siswa</th>
-                <td>{{ $laporan->siswa->nama }}</td>
-            </tr>
-            <tr>
-                <th width="200">NIS</th>
-                <td>{{ $laporan->siswa->nis }}</td>
-            </tr>
-            <tr>
-                <th width="200">Kelas</th>
-                <td>{{ $laporan->siswa->kelas }}</td>
+                <td>{{ $laporan->is_anonim ? 'Siswa Anonim' : $laporan->siswa->nama }} <br><small class="text-muted">NIS: {{ $laporan->is_anonim ? 'Disembunyikan' : $laporan->siswa->nis }} | Kelas: {{ $laporan->is_anonim ? 'Disembunyikan' : $laporan->siswa->kelas }}</small></td>
             </tr>
             <tr>
                 <th>Kategori</th>
@@ -24,6 +16,16 @@
             <tr>
                 <th>Lokasi</th>
                 <td>{{ $laporan->lokasi }}</td>
+            </tr>
+            <tr>
+                <th>Bukti Foto</th>
+                <td>
+                    @if($laporan->foto)
+                        <img src="{{ asset('uploads/laporan/'.$laporan->foto) }}" alt="Bukti Laporan" class="img-fluid rounded" style="max-height: 200px;">
+                    @else
+                        <span class="text-muted">Tidak ada lampiran gambar</span>
+                    @endif
+                </td>
             </tr>
             <tr>
                 <th>Status Saat Ini</th>
@@ -45,6 +47,16 @@
                     </span>
                 </td>
             </tr>
+            @if ($laporan->aspirasi?->alasan)
+            <tr>
+                <th>Alasan Ketidakpuasan</th>
+                <td>
+                    <div class="alert alert-warning mb-0 py-2 px-3">
+                        {{ $laporan->aspirasi->alasan }}
+                    </div>
+                </td>
+            </tr>
+            @endif
         </table>
     </div>
 </div>

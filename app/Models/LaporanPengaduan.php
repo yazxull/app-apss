@@ -14,6 +14,8 @@ class LaporanPengaduan extends Model
         'kategori_id',
         'ket',
         'lokasi',
+        'foto',
+        'is_anonim',
     ];
 
     public function siswa()
@@ -29,5 +31,10 @@ class LaporanPengaduan extends Model
     public function aspirasi()
     {
         return $this->hasOne(Aspirasi::class, 'laporan_id');
+    }
+
+    public function komentar()
+    {
+        return $this->hasMany(KomentarLaporan::class, 'laporan_id');
     }
 }

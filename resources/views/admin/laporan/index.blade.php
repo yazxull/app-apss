@@ -38,6 +38,12 @@
                             Reset
                         </a>
                     </div>
+
+                    <div class="col-md-3 ms-auto text-end">
+                        <a href="{{ route('admin.laporan.cetak', ['bulan' => date('m'), 'tahun' => date('Y')]) }}" target="_blank" class="btn btn-danger">
+                            <i class="bi bi-printer"></i> Cetak PDF B. Ini
+                        </a>
+                    </div>
                 </div>
             </form>
         </div>

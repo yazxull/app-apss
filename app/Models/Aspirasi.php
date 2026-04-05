@@ -14,6 +14,7 @@ class Aspirasi extends Model
       'admin_id',
       'status',
       'feedback',
+      'alasan',
    ];
 
    public function laporan()

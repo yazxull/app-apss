@@ -1,79 +1,96 @@
 @extends('layouts.auth')
-@section('title', 'Register')
+@section('title', 'Daftar Akun Siswa')
+
 @section('content')
-<div class="card shadow-sm" style="width: 400px">
-    <div class="card-header text-center">
-        <h5 class="card-title mb-0">Registrasi Siswa</h5>
+
+<div class="auth-form-header">
+    <div class="auth-form-icon">
+        <i class="bi bi-person-plus-fill"></i>
+    </div>
+    <div class="auth-form-title">Buat Akun Baru</div>
+    <div class="auth-form-sub">Daftarkan diri kamu sebagai siswa untuk mulai melapor.</div>
+</div>
+
+{{-- Error global --}}
+@if ($errors->any() && !$errors->has('nis') && !$errors->has('nama') && !$errors->has('kelas'))
+    <div class="auth-alert">
+        <i class="bi bi-exclamation-circle-fill"></i>
+        <div>{{ $errors->first() }}</div>
+    </div>
+@endif
+
+<form method="POST" action="{{ route('siswa.register') }}">
+    @csrf
+
+    <div class="auth-field">
+        <label class="auth-label">Nomor Induk Siswa (NIS)</label>
+        <div class="auth-input-wrap">
+            <i class="bi bi-person-badge-fill auth-input-icon"></i>
+            <input
+                type="text"
+                name="nis"
+                class="auth-input @error('nis') is-invalid @enderror"
+                placeholder="Masukkan NIS kamu..."
+                value="{{ old('nis', $nis ?? '') }}"
+                autocomplete="off"
+                autofocus>
+        </div>
+        @error('nis')
+            <div class="auth-error">
+                <i class="bi bi-exclamation-circle"></i> {{ $message }}
+            </div>
+        @enderror
     </div>
 
-    <form class="card-body" method="POST"
-        action="{{ route('siswa.register') }}">
-        @csrf
-
-        {{-- NIS --}}
-        <div class="mb-3">
-            <div class="input-group">
-                <span class="input-group-text">
-                    <i class="bi bi-person"></i>
-                </span>
-                <input type="text" name="nis"
-                    class="form-control @error('nis') is-invalid @enderror"
-                    placeholder="NIS"
-                    value="{{ old('nis', $nis) }}">
-            </div>
-            @error('nis')
-            <div class="invalid-feedback d-block">
-                {{ $message }}
-            </div>
-            @enderror
+    <div class="auth-field">
+        <label class="auth-label">Nama Lengkap</label>
+        <div class="auth-input-wrap">
+            <i class="bi bi-card-text auth-input-icon"></i>
+            <input
+                type="text"
+                name="nama"
+                class="auth-input @error('nama') is-invalid @enderror"
+                placeholder="Nama lengkap sesuai data sekolah..."
+                value="{{ old('nama') }}">
         </div>
+        @error('nama')
+            <div class="auth-error">
+                <i class="bi bi-exclamation-circle"></i> {{ $message }}
+            </div>
+        @enderror
+    </div>
 
-        {{-- Nama --}}
-        <div class="mb-3">
-            <div class="input-group">
-                <span class="input-group-text">
-                    <i class="bi bi-card-text"></i>
-                </span>
-                <input type="text" name="nama"
-                    class="form-control @error('nama') is-invalid @enderror"
-                    placeholder="Nama Lengkap"
-                    value="{{ old('nama') }}">
-            </div>
-            @error('nama')
-            <div class="invalid-feedback d-block">
-                {{ $message }}
-            </div>
-            @enderror
+    <div class="auth-field">
+        <label class="auth-label">Kelas</label>
+        <div class="auth-input-wrap">
+            <i class="bi bi-mortarboard-fill auth-input-icon"></i>
+            <input
+                type="text"
+                name="kelas"
+                class="auth-input @error('kelas') is-invalid @enderror"
+                placeholder="Contoh: X PPLG A"
+                value="{{ old('kelas') }}">
         </div>
-
-        {{-- Kelas --}}
-        <div class="mb-3">
-            <div class="input-group">
-                <span class="input-group-text">
-                    <i class="bi bi-mortarboard"></i>
-                </span>
-                <input type="text" name="kelas"
-                    class="form-control @error('kelas') is-invalid @enderror"
-                    placeholder="Kelas (contoh: X PPLG Z)"
-                    value="{{ old('kelas') }}">
+        @error('kelas')
+            <div class="auth-error">
+                <i class="bi bi-exclamation-circle"></i> {{ $message }}
             </div>
-            @error('kelas')
-            <div class="invalid-feedback d-block">
-                {{ $message }}
-            </div>
-            @enderror
-        </div>
+        @enderror
+    </div>
 
-        <div class="d-grid mb-2">
-            <button type="submit" class="btn btn-primary">
-                Daftar
-            </button>
-        </div>
+    <button type="submit" class="auth-submit">
+        <i class="bi bi-person-check-fill"></i> Daftar Sekarang
+    </button>
+</form>
 
-        <p class="text-center mb-0">
-            Sudah punya akun?
-            <a href="{{ route('siswa.login') }}">Login</a>
-        </p>
-    </form>
+<div class="auth-divider">
+    <div class="auth-divider-line"></div>
+    <div class="auth-divider-text">Sudah punya akun?</div>
+    <div class="auth-divider-line"></div>
 </div>
+
+<div class="auth-bottom-link">
+    Sudah terdaftar? <a href="{{ route('siswa.login') }}">Masuk di sini <i class="bi bi-arrow-right"></i></a>
+</div>
+
 @endsection

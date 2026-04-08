@@ -8,18 +8,103 @@ use App\Models\LaporanPengaduan;
 use App\Models\Kategori;
 use App\Models\Aspirasi;
 use Illuminate\Support\Facades\Auth;
-
 use App\Models\KomentarLaporan;
 
 class LaporanPengaduanController extends Controller
 {
+    /**
+     * Tampilkan daftar semua laporan milik siswa (dengan filter & search).
+     */
+    public function index(Request $request)
+    {
+        /** @var \App\Models\Siswa $siswa */
+        $siswa = Auth::guard('siswa')->user();
+
+        // Statistik (untuk pills)
+        $allLaporan = $siswa->laporan()->with('aspirasi')->get();
+        $stats = [
+            'total'    => $allLaporan->count(),
+            'menunggu' => $allLaporan->filter(
+                fn($l) =>
+                !$l->aspirasi || $l->aspirasi->status === 'menunggu'
+            )->count(),
+            'proses'   => $allLaporan->filter(
+                fn($l) =>
+                $l->aspirasi && $l->aspirasi->status === 'proses'
+            )->count(),
+            'selesai'  => $allLaporan->filter(
+                fn($l) =>
+                $l->aspirasi && $l->aspirasi->status === 'selesai'
+            )->count(),
+        ];
+
+        // Query laporan dengan filter
+        $query = $siswa->laporan()->with(['kategori', 'aspirasi']);
+
+        // Filter: search keterangan
+        if ($request->filled('search')) {
+            $query->where('ket', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter: kategori
+        if ($request->filled('kategori')) {
+            $query->where('kategori_id', $request->kategori);
+        }
+
+        // Filter: status (via aspirasi)
+        if ($request->filled('status')) {
+            $status = $request->status;
+            if ($status === 'menunggu') {
+                $query->whereDoesntHave('aspirasi')
+                    ->orWhereHas('aspirasi', fn($q) => $q->where('status', 'menunggu'));
+            } else {
+                $query->whereHas('aspirasi', fn($q) => $q->where('status', $status));
+            }
+        }
+
+        // Sort
+        $sort = $request->input('sort', 'terbaru');
+        $query->orderBy('created_at', $sort === 'terlama' ? 'asc' : 'desc');
+
+        // Paginate
+        $laporan = $query->paginate(10)->withQueryString();
+
+        // Tambahkan atribut status & feedback ke setiap item
+        $kepuasan = [
+            1 => 'Tidak Puas',
+            2 => 'Kurang Puas',
+            3 => 'Cukup Puas',
+            4 => 'Puas',
+            5 => 'Sangat Puas',
+        ];
+
+        $laporan->getCollection()->transform(function ($item) use ($kepuasan) {
+            $item->status = $item->aspirasi ? $item->aspirasi->status : 'menunggu';
+
+            $nilai = $item->aspirasi->feedback ?? null;
+            $item->feedback = $nilai ? ($kepuasan[$nilai] ?? '-') : null;
+
+            return $item;
+        });
+
+        // Ambil semua kategori untuk dropdown filter
+        $kategori = Kategori::all();
+
+        return view('siswa.laporan.index', compact('laporan', 'stats', 'kategori'));
+    }
+
+    /**
+     * Form buat laporan baru.
+     */
     public function create()
     {
         $kategori = Kategori::all();
-
         return view('siswa.laporan.create', compact('kategori'));
     }
 
+    /**
+     * Simpan laporan baru.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -50,31 +135,40 @@ class LaporanPengaduanController extends Controller
             ->with('success', 'Laporan berhasil dikirim');
     }
 
+    /**
+     * Detail laporan.
+     */
     public function show(LaporanPengaduan $laporan)
     {
         $laporan->load(['siswa', 'aspirasi', 'kategori', 'komentar.sender']);
 
-        return view('siswa.laporan.show', [
-            'laporan' => $laporan
-        ]);
+        $laporan->komentar()
+            ->where('sender_type', 'admin')
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        return view('siswa.laporan.show', ['laporan' => $laporan]);
     }
 
+    /**
+     * Hapus laporan.
+     */
     public function destroy(LaporanPengaduan $laporan)
     {
         $laporan->delete();
 
         return redirect()
-            ->route('siswa.dashboard')
+            ->route('siswa.laporan.index')
             ->with('success', 'Laporan berhasil dihapus');
     }
 
+    /**
+     * Simpan feedback kepuasan.
+     */
     public function feedback(Request $request, Aspirasi $aspirasi)
     {
-        $rules = [
-            'feedback' => 'required|integer|min:1|max:5',
-        ];
+        $rules = ['feedback' => 'required|integer|min:1|max:5'];
 
-        // Jika feedback 1 (Tidak Puas) atau 2 (Kurang Puas), alasan wajib diisi
         if (in_array((int) $request->feedback, [1, 2])) {
             $rules['alasan'] = 'required|string|max:1000';
         } else {
@@ -95,11 +189,12 @@ class LaporanPengaduanController extends Controller
             ->with('success', 'Terima kasih atas feedback Anda.');
     }
 
+    /**
+     * Simpan komentar siswa pada laporan.
+     */
     public function storeKomentar(Request $request, LaporanPengaduan $laporan)
     {
-        $request->validate([
-            'pesan' => 'required|string|max:1000'
-        ]);
+        $request->validate(['pesan' => 'required|string|max:1000']);
 
         KomentarLaporan::create([
             'laporan_id'  => $laporan->id,

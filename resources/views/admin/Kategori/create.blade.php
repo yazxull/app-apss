@@ -3,29 +3,20 @@
 @section('title', 'Tambah Kategori')
 
 @section('content')
-    <h4 class="mb-3 mt-3">Tambah Kategori</h4>
 
-    <div class="card">
-        {{-- Form diarahkan ke method store di KategoriController --}}
-        <form action="{{ route('admin.kategori.store') }}" method="POST" class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    @csrf
-
-                    {{-- Menggunakan komponen input custom --}}
-                    <x-input name="nama_kategori" placeholder="Nama Kategori" />
-
-                    <div class="mt-3">
-                        <button type="submit" class="btn btn-primary">
-                            Simpan
-                        </button>
-                        
-                        <a href="{{ route('admin.kategori.index') }}" class="btn btn-secondary">
-                            Kembali
-                        </a>
-                    </div>
-                </div>
+<div class="card" style="max-width: 480px;">
+    <div class="card-header">Tambah Kategori Baru</div>
+    <div class="card-body">
+        <form method="POST" action="{{ route('admin.kategori.store') }}">
+            @csrf
+            <div class="mb-3">
+                <label class="form-label">Nama Kategori</label>
+                <input type="text" name="nama_kategori" class="form-control @error('nama_kategori') is-invalid @enderror" placeholder="Contoh: Kebersihan" value="{{ old('nama_kategori') }}">
+                @error('nama_kategori')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
+            <button type="submit" class="btn btn-primary">Simpan Kategori</button>
         </form>
     </div>
+</div>
+
 @endsection

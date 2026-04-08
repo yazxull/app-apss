@@ -1,117 +1,66 @@
-<div class="mb-4">
-    <div class="text-muted small mb-2">Feedback Kepuasan</div>
-
-    @if ($laporan->aspirasi->feedback)
-
-        {{-- SUDAH MEMBERI FEEDBACK --}}
-        <div class="alert alert-success mb-0">
-            Feedback telah diberikan:
-            <strong>
-                {{
-                    [
-                        1 => 'Tidak Puas',
-                        2 => 'Kurang Puas',
-                        3 => 'Cukup Puas',
-                        4 => 'Puas',
-                        5 => 'Sangat Puas',
-                    ][$laporan->aspirasi->feedback] ?? '-'
-                }}
-            </strong>
-        </div>
-
-        {{-- Tampilkan alasan jika ada --}}
-        @if ($laporan->aspirasi->alasan)
-            <div class="alert alert-warning mt-2 mb-0">
-                <strong>Alasan:</strong>
-                <p class="mb-0 mt-1">{{ $laporan->aspirasi->alasan }}</p>
+<div class="card mb-3">
+    <div class="card-header"><i class="bi bi-star-fill me-2" style="color:#F59E0B;"></i>Feedback Kepuasan</div>
+    <div class="card-body">
+        @if ($laporan->aspirasi->feedback)
+            <div style="background:#ECFDF5; color:#065F46; padding:12px 16px; border-radius:8px; font-size:13.5px; font-weight:600; margin-bottom:12px;">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                Feedback telah diberikan:
+                {{ [1=>'Tidak Puas',2=>'Kurang Puas',3=>'Cukup Puas',4=>'Puas',5=>'Sangat Puas'][$laporan->aspirasi->feedback] ?? '-' }}
             </div>
-        @endif
-
-    @else
-
-        {{-- BELUM MEMBERI FEEDBACK --}}
-        <form action="{{ route('siswa.laporan.feedback', $laporan->aspirasi->id) }}"
-              method="POST">
-            @csrf
-
-            <div class="d-flex flex-column gap-2">
-
-                <label class="d-flex align-items-center gap-2">
-                    <input type="radio" name="feedback" value="1" class="feedback-radio"
-                           {{ old('feedback') == '1' ? 'checked' : '' }}>
-                    <span>Tidak Puas</span>
-                </label>
-
-                <label class="d-flex align-items-center gap-2">
-                    <input type="radio" name="feedback" value="2" class="feedback-radio"
-                           {{ old('feedback') == '2' ? 'checked' : '' }}>
-                    <span>Kurang Puas</span>
-                </label>
-
-                <label class="d-flex align-items-center gap-2">
-                    <input type="radio" name="feedback" value="3" class="feedback-radio"
-                           {{ old('feedback') == '3' ? 'checked' : '' }}>
-                    <span>Cukup Puas</span>
-                </label>
-
-                <label class="d-flex align-items-center gap-2">
-                    <input type="radio" name="feedback" value="4" class="feedback-radio"
-                           {{ old('feedback') == '4' ? 'checked' : '' }}>
-                    <span>Puas</span>
-                </label>
-
-                <label class="d-flex align-items-center gap-2">
-                    <input type="radio" name="feedback" value="5" class="feedback-radio"
-                           {{ old('feedback') == '5' ? 'checked' : '' }}>
-                    <span>Sangat Puas</span>
-                </label>
-
-            </div>
-
-            @error('feedback')
-                <div class="text-danger small mt-2">
-                    {{ $message }}
+            @if ($laporan->aspirasi->alasan)
+                <div style="background:#FFFBEB; color:#92400E; padding:12px 16px; border-radius:8px; font-size:13px;">
+                    <strong>Alasan:</strong> {{ $laporan->aspirasi->alasan }}
                 </div>
-            @enderror
+            @endif
+        @else
+            <form action="{{ route('siswa.laporan.feedback', $laporan->aspirasi->id) }}" method="POST">
+                @csrf
+                <p style="font-size:13.5px; color:#64748B; margin-bottom:14px;">Bagaimana kepuasan Anda terhadap penanganan laporan ini?</p>
 
-            {{-- Form Alasan (muncul saat pilih Tidak Puas / Kurang Puas) --}}
-            <div id="alasan-container" class="mt-3" style="display: {{ in_array(old('feedback'), ['1', '2']) ? 'block' : 'none' }};">
-                <label for="alasan" class="form-label fw-semibold">
-                    Alasan ketidakpuasan <span class="text-danger">*</span>
-                </label>
-                <textarea name="alasan" id="alasan" rows="3"
-                          class="form-control @error('alasan') is-invalid @enderror"
-                          placeholder="Jelaskan alasan mengapa Anda tidak puas dengan hasil yang diberikan...">{{ old('alasan') }}</textarea>
-                @error('alasan')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    @foreach([1=>'😞 Tidak Puas', 2=>'😐 Kurang Puas', 3=>'🙂 Cukup Puas', 4=>'😊 Puas', 5=>'🤩 Sangat Puas'] as $val => $label)
+                        <label style="cursor:pointer;">
+                            <input type="radio" name="feedback" value="{{ $val }}" class="feedback-radio d-none" {{ old('feedback') == $val ? 'checked' : '' }}>
+                            <span class="feedback-opt" style="display:inline-block; padding:7px 14px; border-radius:20px; font-size:13px; font-weight:600; border:1.5px solid #E2E8F0; color:#64748B; transition:all 0.15s; user-select:none;">{{ $label }}</span>
+                        </label>
+                    @endforeach
+                </div>
+                @error('feedback')<div style="color:#EF4444; font-size:12px; margin-bottom:10px;">{{ $message }}</div>@enderror
 
-            <button class="btn btn-primary btn-sm mt-3">
-                Kirim Feedback
-            </button>
-        </form>
+                <div id="alasan-container" style="display:{{ in_array(old('feedback'), ['1','2']) ? 'block' : 'none' }}; margin-bottom:14px;">
+                    <textarea name="alasan" id="alasan" rows="3" class="form-control" placeholder="Jelaskan alasan ketidakpuasan Anda..." style="font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; border:1.5px solid #E2E8F0; border-radius:8px; padding:10px 13px; width:100%;">{{ old('alasan') }}</textarea>
+                    @error('alasan')<div style="color:#EF4444; font-size:12px; margin-top:4px;">{{ $message }}</div>@enderror
+                </div>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
+                <button class="btn btn-primary btn-sm" style="padding:8px 20px;">
+                    <i class="bi bi-send me-1"></i>Kirim Feedback
+                </button>
+            </form>
+
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
                 const radios = document.querySelectorAll('.feedback-radio');
                 const alasanContainer = document.getElementById('alasan-container');
-                const alasanTextarea = document.getElementById('alasan');
+                const opts = document.querySelectorAll('.feedback-opt');
 
-                radios.forEach(function (radio) {
-                    radio.addEventListener('change', function () {
-                        if (this.value === '1' || this.value === '2') {
-                            alasanContainer.style.display = 'block';
-                        } else {
-                            alasanContainer.style.display = 'none';
-                            alasanTextarea.value = '';
-                        }
+                function updateStyles() {
+                    radios.forEach((r, i) => {
+                        opts[i].style.background = r.checked ? '#EFF6FF' : '';
+                        opts[i].style.borderColor = r.checked ? '#2563EB' : '#E2E8F0';
+                        opts[i].style.color = r.checked ? '#2563EB' : '#64748B';
+                    });
+                }
+
+                radios.forEach(function(radio) {
+                    radio.addEventListener('change', function() {
+                        alasanContainer.style.display = (this.value === '1' || this.value === '2') ? 'block' : 'none';
+                        if (this.value !== '1' && this.value !== '2') document.getElementById('alasan').value = '';
+                        updateStyles();
                     });
                 });
+                updateStyles();
             });
-        </script>
-
-    @endif
+            </script>
+        @endif
+    </div>
 </div>

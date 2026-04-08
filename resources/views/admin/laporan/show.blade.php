@@ -1,55 +1,52 @@
 @extends('layouts.admin')
 
-@section('title', 'Laporan Aspirasi')
+@section('title', 'Detail Laporan')
 
 @section('content')
-    <h4 class="mb-4 mt-3">Laporan Aspirasi</h4>
 
-    {{-- Pesan Sukses --}}
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+@if (session('success'))
+    <div class="alert alert-success mb-4">{{ session('success') }}</div>
+@endif
 
-    <div class="row">
-       
-        <div class="col-md-8">
-            @include('admin.laporan.detil')
-        </div>
+<div class="row g-3">
+    <div class="col-md-8">
+        @include('admin.laporan.detil')
+    </div>
+    <div class="col-md-4">
+        @include('admin.laporan.form-status')
 
-       
-        <div class="col-md-4">
-            @include('admin.laporan.form-status')
-
-            {{-- Ruang Komentar (Diskusi) --}}
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h6 class="card-title mb-0">Ruang Diskusi / Komentar</h6>
-                </div>
-                <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+        <div class="card mt-3">
+            <div class="card-header">
+                <i class="bi bi-chat-dots-fill me-2" style="color:#2563EB;"></i>Ruang Diskusi
+            </div>
+            <div class="card-body p-0">
+                <div style="max-height: 320px; overflow-y: auto; padding: 16px;">
                     @forelse($laporan->komentar as $komen)
-                        <div class="mb-3 {{ $komen->sender_type == 'admin' ? 'text-end' : '' }}">
-                            <div class="d-inline-block p-2 rounded {{ $komen->sender_type == 'admin' ? 'bg-primary text-white' : 'bg-light border' }}" style="max-width: 80%;">
-                                <small class="d-block fw-bold mb-1">{{ $komen->sender_type == 'admin' ? 'Anda' : ($laporan->is_anonim ? 'Siswa Anonim' : $laporan->siswa->nama) }}</small>
-                                {{ $komen->pesan }}
-                                <small class="d-block {{ $komen->sender_type == 'admin' ? 'text-white-50' : 'text-muted' }} mt-1" style="font-size: 0.7em;">{{ $komen->created_at->format('d/m/Y H:i') }}</small>
+                        <div class="mb-3 {{ $komen->sender_type == 'admin' ? 'd-flex flex-column align-items-end' : '' }}">
+                            <div style="display:inline-block; max-width:85%; padding: 10px 14px; border-radius: 12px; {{ $komen->sender_type == 'admin' ? 'background:#EFF6FF; color:#1D4ED8;' : 'background:#F8FAFC; border: 1px solid #E2E8F0; color:#0F172A;' }}">
+                                <small style="font-weight:700; font-size:11px; display:block; margin-bottom:3px;">
+                                    {{ $komen->sender_type == 'admin' ? 'Admin' : ($laporan->is_anonim ? 'Siswa Anonim' : $laporan->siswa->nama) }}
+                                </small>
+                                <span style="font-size:13px;">{{ $komen->pesan }}</span>
+                                <small style="display:block; font-size:10px; color:#94A3B8; margin-top:4px;">{{ $komen->created_at->format('d/m/Y H:i') }}</small>
                             </div>
                         </div>
                     @empty
-                        <div class="text-center text-muted"><small>Belum ada diskusi.</small></div>
+                        <div class="text-center py-3" style="color:#94A3B8; font-size:13px;">Belum ada diskusi.</div>
                     @endforelse
                 </div>
-                <div class="card-footer">
-                    <form action="{{ route('admin.laporan.komentar', $laporan->id) }}" method="POST">
-                        @csrf
-                        <div class="input-group">
-                            <input type="text" name="pesan" class="form-control" placeholder="Balas komentar..." required>
-                            <button class="btn btn-primary" type="submit"><i class="bi bi-send"></i></button>
-                        </div>
-                    </form>
-                </div>
+            </div>
+            <div class="card-footer" style="padding: 12px 16px;">
+                <form action="{{ route('admin.laporan.komentar', $laporan->id) }}" method="POST">
+                    @csrf
+                    <div class="d-flex gap-2">
+                        <input type="text" name="pesan" class="form-control" placeholder="Balas komentar..." required>
+                        <button class="btn btn-primary" type="submit" style="padding: 8px 16px; flex-shrink:0;"><i class="bi bi-send"></i></button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
+
 @endsection

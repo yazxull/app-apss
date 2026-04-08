@@ -16,11 +16,20 @@ class Siswa extends Authenticatable
         'nis',
         'nama',
         'kelas',
+        'password',
     ];
 
     protected $hidden = [
+        'password',
         'remember_token',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+        ];
+    }
 
     protected function nama(): Attribute
     {

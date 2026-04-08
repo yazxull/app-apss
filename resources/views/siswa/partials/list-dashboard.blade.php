@@ -1,8 +1,9 @@
-<table class="table table-hover mb-0">
-    <thead class="table-light">
+<table class="table">
+    <thead>
         <tr>
             <th>#</th>
             <th>Keterangan Laporan</th>
+            <th>Kategori</th>
             <th>Status</th>
             <th></th>
         </tr>
@@ -10,40 +11,43 @@
     <tbody>
         @forelse ($laporan as $item)
             <tr>
-                <td>{{ $loop->iteration + ($laporan->firstItem() - 1) }}</td>
+                <td style="color:#94A3B8; font-size:12px;">{{ $loop->iteration + ($laporan->firstItem() - 1) }}</td>
                 <td>
-                    {{ $item->ket }}
-                    <p>
-                        <small class="text-muted">
-                            {{ $item->created_at->format('d M Y') }}
-                        </small>
-                    </p>
-                    <p class="text-muted">
-                        Kategori : {{ $item->kategori->nama_kategori ?? '-' }},
-                        Lokasi : {{ $item->lokasi }},
-                        Feedback : {{ $item->feedback }}
-                    </p>
+                    <div style="font-weight:600; color:#0F172A; margin-bottom:3px;">{{ Str::limit($item->ket, 60) }}</div>
+                    <small style="color:#94A3B8;">
+                        <i class="bi bi-calendar3 me-1"></i>{{ $item->created_at->format('d M Y') }}
+                        &nbsp;·&nbsp;
+                        <i class="bi bi-geo-alt me-1"></i>{{ $item->lokasi }}
+                        @if($item->feedback)
+                            &nbsp;·&nbsp; Feedback: {{ $item->feedback }}
+                        @endif
+                    </small>
+                </td>
+                <td>
+                    <span style="background:#EFF6FF; color:#2563EB; font-size:11.5px; font-weight:600; padding:3px 9px; border-radius:5px;">
+                        {{ $item->kategori->nama_kategori ?? '-' }}
+                    </span>
                 </td>
                 <td>
                     @if ($item->status == 'proses')
-                        <span class="badge bg-warning text-dark">Diproses</span>
+                        <span class="badge bg-warning">Diproses</span>
                     @elseif ($item->status == 'selesai')
                         <span class="badge bg-success">Selesai</span>
                     @else
-                        <span class="badge bg-light text-dark">Menunggu</span>
+                        <span class="badge bg-secondary">Menunggu</span>
                     @endif
                 </td>
                 <td>
-                    <a href="{{ route('siswa.laporan.show', $item->id) }}" class="btn btn-primary btn-sm">
-                        <i class="bi bi-eye"></i>
-                        Lihat
+                    <a href="{{ route('siswa.laporan.show', $item->id) }}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-eye me-1"></i>Detail
                     </a>
                 </td>
             </tr>
         @empty
             <tr>
-                <td colspan="6" class="text-center text-muted py-4">
-                    Belum ada laporan
+                <td colspan="5" class="text-center py-5" style="color:#94A3B8;">
+                    <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                    Belum ada laporan yang dibuat.
                 </td>
             </tr>
         @endforelse

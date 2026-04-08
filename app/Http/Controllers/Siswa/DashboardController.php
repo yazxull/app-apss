@@ -3,41 +3,44 @@
 namespace App\Http\Controllers\Siswa;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        /** @var \App\Models\Siswa $siswa */
         $siswa = Auth::guard('siswa')->user();
 
-        $laporan = $siswa->laporan()
-            ->with(['kategori', 'aspirasi'])
-            ->latest()
-            ->paginate();
+        // Ambil semua laporan untuk statistik
+        $allLaporan = $siswa->laporan()->with('aspirasi')->get();
 
-        $kepuasan = [
-            1 => 'Tidak Puas',
-            2 => 'Kurang Puas',
-            3 => 'Cukup Puas',
-            4 => 'Puas',
-            5 => 'Sangat Puas',
+        $stats = [
+            'total'    => $allLaporan->count(),
+            'menunggu' => $allLaporan->filter(fn($l) =>
+                !$l->aspirasi || $l->aspirasi->status === 'menunggu'
+            )->count(),
+            'proses'   => $allLaporan->filter(fn($l) =>
+                $l->aspirasi && $l->aspirasi->status === 'proses'
+            )->count(),
+            'selesai'  => $allLaporan->filter(fn($l) =>
+                $l->aspirasi && $l->aspirasi->status === 'selesai'
+            )->count(),
         ];
 
-        $laporan->getCollection()->transform(function ($item) use ($kepuasan) {
-            $item->status = $item->aspirasi 
-                ? $item->aspirasi->status 
-                : null;
+        // Ambil 5 laporan terbaru untuk aktivitas di dashboard
+        $laporanTerbaru = $siswa->laporan()
+            ->with(['kategori', 'aspirasi'])
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($item) {
+                $item->status = $item->aspirasi
+                    ? $item->aspirasi->status
+                    : 'menunggu';
+                return $item;
+            });
 
-            $nilai = $item->aspirasi->feedback ?? null;
-            $item->feedback = $nilai 
-                ? ($kepuasan[$nilai] ?? '-') 
-                : 'Belum ada feedback';
-
-            return $item;
-        });
-
-        return view('siswa.dashboard', compact('laporan'));
+        return view('siswa.dashboard', compact('stats', 'laporanTerbaru'));
     }
 }

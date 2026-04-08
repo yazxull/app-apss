@@ -22,11 +22,11 @@ class DatabaseSeeder extends Seeder
 
         // Kategori
         $kategoris = [
-            'Fasilitas & Infrastruktur',
-            'Keamanan & Ketertiban',
-            'Kebersihan Lingkungan',
-            'Pelanggaran Etika / Bullying',
-            'Kegiatan Belajar Mengajar',
+            'Fasilitas',
+            'Keamanan',
+            'Sarana umum',
+            'Lab',
+            'Kelas',
         ];
 
         foreach ($kategoris as $kategori) {

@@ -66,6 +66,12 @@ class LaporanAspirasiController extends Controller
         // Memuat relasi yang diperlukan
         $laporan->load(['kategori', 'aspirasi', 'komentar.sender']);
 
+        // Tandai komentar dari siswa sebagai sudah dibaca
+        $laporan->komentar()
+            ->where('sender_type', 'siswa')
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
         $kepuasan = [
             1 => 'Tidak Puas',
             2 => 'Kurang Puas',
@@ -107,15 +113,30 @@ class LaporanAspirasiController extends Controller
 
     public function cetakPdf(Request $request)
     {
-        $bulan = $request->query('bulan', date('m'));
-        $tahun = $request->query('tahun', date('Y'));
+        $jenis  = $request->query('jenis', 'bulanan');
+        $bulan  = $request->query('bulan', date('m'));
+        $tahun  = $request->query('tahun', date('Y'));
+        $tanggal = $request->query('tanggal', date('Y-m-d'));
 
-        $laporan = LaporanPengaduan::with(['kategori', 'siswa', 'aspirasi'])
-            ->whereMonth('created_at', $bulan)
-            ->whereYear('created_at', $tahun)
-            ->get();
+        $query = LaporanPengaduan::with(['kategori', 'siswa', 'aspirasi']);
 
-        return view('admin.laporan.cetak', compact('laporan', 'bulan', 'tahun'));
+        if ($jenis === 'harian') {
+            // Filter berdasarkan tanggal spesifik
+            $query->whereDate('created_at', $tanggal);
+
+        } elseif ($jenis === 'tahunan') {
+            // Filter hanya berdasarkan tahun
+            $query->whereYear('created_at', $tahun);
+
+        } else {
+            // Default: bulanan — filter bulan + tahun
+            $query->whereMonth('created_at', $bulan)
+                  ->whereYear('created_at', $tahun);
+        }
+
+        $laporan = $query->orderBy('created_at')->get();
+
+        return view('admin.laporan.cetak', compact('laporan', 'jenis', 'bulan', 'tahun', 'tanggal'));
     }
 
     public function storeKomentar(Request $request, LaporanPengaduan $laporan)

@@ -31,13 +31,21 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // Grafik Donat Kategori
+        $kategoriSebaran = \Illuminate\Support\Facades\DB::table('laporan_pengaduans')
+            ->join('kategoris', 'laporan_pengaduans.kategori_id', '=', 'kategoris.id')
+            ->select('kategoris.nama_kategori as kategori', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+            ->groupBy('kategoris.nama_kategori')
+            ->get();
+
         // Mengirimkan data ke view admin.dashboard
         return view('admin.dashboard', compact(
             'totalSiswa',
             'totalLaporan',
             'laporanProses',
             'laporanSelesai',
-            'laporanTerbaru'
+            'laporanTerbaru',
+            'kategoriSebaran'
         ));
     }
 }

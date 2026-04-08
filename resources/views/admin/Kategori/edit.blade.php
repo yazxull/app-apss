@@ -3,29 +3,20 @@
 @section('title', 'Edit Kategori')
 
 @section('content')
-    <h4 class="mb-3 mt-3">Edit Kategori</h4>
 
-    <div class="card">
-        {{-- Form diarahkan ke method update dengan parameter ID kategori --}}
-        <form class="card-body" action="{{ route('admin.kategori.update', $kategori->id) }}" method="POST">
-            <div class="col">
-                <div class="col-md-6">
-                    @csrf
-                    {{-- Method PUT wajib digunakan untuk proses update di Laravel --}}
-                    @method('PUT')
-
-                    {{-- Mengisi nilai awal input dengan data dari database --}}
-                    <x-input name="nama_kategori" :value="$kategori->nama_kategori" placeholder="Nama Kategori" />
-
-                    <div class="mt-3">
-                        <button class="btn btn-primary">Update</button>
-                        
-                        <a href="{{ route('admin.kategori.index') }}" class="btn btn-secondary">
-                            Kembali
-                        </a>
-                    </div>
-                </div>
+<div class="card" style="max-width: 480px;">
+    <div class="card-header">Edit Kategori</div>
+    <div class="card-body">
+        <form method="POST" action="{{ route('admin.kategori.update', $kategori->id) }}">
+            @csrf @method('PUT')
+            <div class="mb-3">
+                <label class="form-label">Nama Kategori</label>
+                <input type="text" name="nama_kategori" class="form-control @error('nama_kategori') is-invalid @enderror" value="{{ old('nama_kategori', $kategori->nama_kategori) }}">
+                @error('nama_kategori')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
+            <button type="submit" class="btn btn-primary">Update Kategori</button>
         </form>
     </div>
+</div>
+
 @endsection

@@ -11,6 +11,8 @@ class LaporanPengaduan extends Model
 
     protected $fillable = [
         'siswa_id',
+        'reporter_type',
+        'reporter_id',
         'kategori_id',
         'ket',
         'lokasi',
@@ -18,9 +20,16 @@ class LaporanPengaduan extends Model
         'is_anonim',
     ];
 
+    // Relasi lama (tetap dipertahankan untuk kompatibilitas)
     public function siswa()
     {
         return $this->belongsTo(Siswa::class);
+    }
+
+    // Relasi polymorphic baru
+    public function reporter()
+    {
+        return $this->morphTo();
     }
 
     public function kategori()

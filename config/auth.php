@@ -52,9 +52,14 @@ return [
         ],
 
         'pegawai' => [
-    'driver'   => 'session',
-    'provider' => 'pegawais',
-],
+            'driver'   => 'session',
+            'provider' => 'pegawais',
+        ],
+
+        'guru' => [
+            'driver'   => 'session',
+            'provider' => 'gurus',
+        ],
     ],
 
     /*
@@ -77,17 +82,27 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Models\User::class,
         ],
 
         'admins' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\Admin::class),
+            'model' => App\Models\Admin::class,
         ],
 
         'siswas' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\Siswa::class),
+            'model' => App\Models\Siswa::class,
+        ],
+
+        'pegawais' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Pegawai::class,
+        ],
+
+        'gurus' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Guru::class,
         ],
 
         // 'users' => [

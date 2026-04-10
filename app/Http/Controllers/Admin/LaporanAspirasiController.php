@@ -13,7 +13,7 @@ class LaporanAspirasiController extends Controller
     public function index(Request $request)
     {
         // Memulai query dengan eager loading untuk optimasi
-        $query = LaporanPengaduan::with(['kategori', 'aspirasi'])
+        $query = LaporanPengaduan::with(['kategori', 'aspirasi', 'reporter', 'siswa'])
             ->latest();
 
         // Logika Filter Status
@@ -64,7 +64,7 @@ class LaporanAspirasiController extends Controller
     public function show(LaporanPengaduan $laporan)
     {
         // Memuat relasi yang diperlukan
-        $laporan->load(['kategori', 'aspirasi', 'komentar.sender']);
+        $laporan->load(['kategori', 'aspirasi', 'komentar.sender', 'reporter', 'siswa']);
 
         // Tandai komentar dari siswa sebagai sudah dibaca
         $laporan->komentar()
@@ -118,7 +118,7 @@ class LaporanAspirasiController extends Controller
         $tahun  = $request->query('tahun', date('Y'));
         $tanggal = $request->query('tanggal', date('Y-m-d'));
 
-        $query = LaporanPengaduan::with(['kategori', 'siswa', 'aspirasi']);
+        $query = LaporanPengaduan::with(['kategori', 'siswa', 'reporter', 'aspirasi']);
 
         if ($jenis === 'harian') {
             // Filter berdasarkan tanggal spesifik

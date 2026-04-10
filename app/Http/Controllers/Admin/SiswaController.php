@@ -96,4 +96,57 @@ class SiswaController extends Controller
         return redirect()->route('admin.pengguna.siswa.index')
             ->with('success', 'Data siswa berhasil dihapus.');
     }
+
+    public function exportExcel()
+    {
+        $siswas = Siswa::latest()->get();
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Data Siswa');
+
+        $sheet->setCellValue('A1', 'No')
+              ->setCellValue('B1', 'NAMA')
+              ->setCellValue('C1', 'NIS')
+              ->setCellValue('D1', 'KELAS');
+
+        $sheet->getStyle('A1:D1')->applyFromArray([
+            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+            'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => '2563EB']],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
+        ]);
+
+        $row = 2;
+        $no = 1;
+        foreach ($siswas as $siswa) {
+            $sheet->setCellValue('A' . $row, $no++)
+                  ->setCellValue('B' . $row, $siswa->nama)
+                  ->setCellValue('C' . $row, $siswa->nis)
+                  ->setCellValue('D' . $row, $siswa->kelas);
+            $row++;
+        }
+
+        foreach (range('A', 'D') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $filename = 'data_siswa_' . date('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
+    public function exportPdf()
+    {
+        $siswas = Siswa::latest()->get();
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.siswa', compact('siswas'));
+        // Optional: set paper size
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->download('data_siswa_' . date('Ymd_His') . '.pdf');
+    }
 } 

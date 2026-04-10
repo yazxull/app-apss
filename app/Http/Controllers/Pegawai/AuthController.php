@@ -11,15 +11,15 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'nip'      => 'required',
+            'username' => 'required',
             'password' => 'required',
         ], [
-            'nip.required'      => 'NIP wajib diisi.',
+            'username.required' => 'Username wajib diisi.',
             'password.required' => 'Password wajib diisi.',
         ]);
 
         if (Auth::guard('pegawai')->attempt([
-            'nip'      => $request->nip,
+            'username' => $request->username,
             'password' => $request->password,
         ])) {
             $request->session()->regenerate();
@@ -27,8 +27,8 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'nip' => 'NIP atau password salah.',
-        ])->withInput($request->only('nip'));
+            'username' => 'Username atau password salah.',
+        ])->withInput($request->only('username'));
     }
 
     public function logout(Request $request)

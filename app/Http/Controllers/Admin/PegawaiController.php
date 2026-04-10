@@ -17,7 +17,7 @@ class PegawaiController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('nip', 'like', "%{$search}%")
+                  ->orWhere('username', 'like', "%{$search}%")
                   ->orWhere('jabatan', 'like', "%{$search}%");
             });
         }
@@ -36,18 +36,18 @@ class PegawaiController extends Controller
     {
         $request->validate([
             'nama'     => 'required|string|max:100',
-            'nip'      => 'required|string|unique:pegawais,nip|max:30',
+            'username' => 'required|string|unique:pegawais,username|max:50',
             'jabatan'  => 'nullable|string|max:100',
             'password' => 'required|string|min:6|confirmed',
         ], [
-            'nip.unique'           => 'NIP sudah terdaftar.',
-            'password.confirmed'   => 'Konfirmasi password tidak cocok.',
-            'password.min'         => 'Password minimal 6 karakter.',
+            'username.unique'       => 'Username sudah digunakan.',
+            'password.confirmed'    => 'Konfirmasi password tidak cocok.',
+            'password.min'          => 'Password minimal 6 karakter.',
         ]);
 
         Pegawai::create([
             'nama'     => $request->nama,
-            'nip'      => $request->nip,
+            'username' => $request->username,
             'jabatan'  => $request->jabatan,
             'password' => Hash::make($request->password),
         ]);
@@ -65,19 +65,19 @@ class PegawaiController extends Controller
     {
         $request->validate([
             'nama'     => 'required|string|max:100',
-            'nip'      => 'required|string|max:30|unique:pegawais,nip,' . $pegawai->id,
+            'username' => 'required|string|max:50|unique:pegawais,username,' . $pegawai->id,
             'jabatan'  => 'nullable|string|max:100',
             'password' => 'nullable|string|min:6|confirmed',
         ], [
-            'nip.unique'         => 'NIP sudah terdaftar.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
-            'password.min'       => 'Password minimal 6 karakter.',
+            'username.unique'       => 'Username sudah digunakan.',
+            'password.confirmed'    => 'Konfirmasi password tidak cocok.',
+            'password.min'          => 'Password minimal 6 karakter.',
         ]);
 
         $data = [
-            'nama'    => $request->nama,
-            'nip'     => $request->nip,
-            'jabatan' => $request->jabatan,
+            'nama'     => $request->nama,
+            'username' => $request->username,
+            'jabatan'  => $request->jabatan,
         ];
 
         if ($request->filled('password')) {
@@ -95,5 +95,57 @@ class PegawaiController extends Controller
         $pegawai->delete();
         return redirect()->route('admin.pengguna.pegawai.index')
             ->with('success', 'Data pegawai berhasil dihapus.');
+    }
+
+    public function exportExcel()
+    {
+        $pegawais = Pegawai::latest()->get();
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Data Pegawai');
+
+        $sheet->setCellValue('A1', 'No')
+              ->setCellValue('B1', 'NAMA')
+              ->setCellValue('C1', 'USERNAME')
+              ->setCellValue('D1', 'JABATAN');
+
+        $sheet->getStyle('A1:D1')->applyFromArray([
+            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+            'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => '2563EB']],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
+        ]);
+
+        $row = 2;
+        $no = 1;
+        foreach ($pegawais as $pegawai) {
+            $sheet->setCellValue('A' . $row, $no++)
+                  ->setCellValue('B' . $row, $pegawai->nama)
+                  ->setCellValue('C' . $row, $pegawai->username)
+                  ->setCellValue('D' . $row, $pegawai->jabatan);
+            $row++;
+        }
+
+        foreach (range('A', 'D') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $filename = 'data_pegawai_' . date('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
+    public function exportPdf()
+    {
+        $pegawais = Pegawai::latest()->get();
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.pegawai', compact('pegawais'));
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->download('data_pegawai_' . date('Ymd_His') . '.pdf');
     }
 }

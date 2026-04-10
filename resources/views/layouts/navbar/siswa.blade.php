@@ -463,6 +463,10 @@
         .nav-links, .nav-right { display: none !important; }
         .apss-navbar .navbar-inner { padding: 0 16px; }
     }
+
+    @media (max-width: 768px) {
+        .apss-navbar .navbar-inner { padding: 0 16px; } /* ← sudah ada, tidak perlu diubah */
+    }
 </style>
 
 <nav class="apss-navbar {{ request()->routeIs('welcome') ? 'nav-transparent' : 'nav-scrolled' }}" id="apssNavbar">
@@ -488,7 +492,7 @@
             </li>
             <li class="nav-link-item">
                 <a href="{{ route('siswa.laporan.index') }}">
-                    <i class="bi bi-file-earmark-text-fill"></i> Riwayat Laporan
+                    <i class="bi bi-file-earmark-text-fill"></i> Buat Laporan
                 </a>
             </li>
         </ul>
@@ -499,9 +503,6 @@
             @guest('siswa')
                 <a href="{{ route('siswa.login') }}" class="nav-btn-ghost">
                     <i class="bi bi-box-arrow-in-right"></i> Masuk
-                </a>
-                <a href="{{ route('siswa.register') }}" class="nav-btn-primary">
-                    <i class="bi bi-person-plus-fill"></i> Daftar
                 </a>
             @endguest
 
@@ -559,9 +560,6 @@
     @guest('siswa')
         <a href="{{ route('siswa.login') }}" class="nav-mobile-item">
             <i class="bi bi-box-arrow-in-right"></i> Masuk Siswa
-        </a>
-        <a href="{{ route('siswa.register') }}" class="nav-mobile-item primary">
-            <i class="bi bi-person-plus-fill"></i> Daftar Baru
         </a>
     @endguest
     @auth('siswa')

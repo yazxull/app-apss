@@ -7,17 +7,11 @@ use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         Paginator::useBootstrapFive();
@@ -25,7 +19,8 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Database\Eloquent\Relations\Relation::enforceMorphMap([
             'admin'   => 'App\Models\Admin',
             'siswa'   => 'App\Models\Siswa',
-            'pegawai' => 'App\Models\Pegawai', // ← tambah
+            'pegawai' => 'App\Models\Pegawai',
+            'guru'    => 'App\Models\Guru', // ← tambah ini
         ]);
 
         // Global Notifikasi Siswa
@@ -56,10 +51,17 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        // Global Notifikasi Pegawai ← tambah
+        // Global Notifikasi Pegawai
         \Illuminate\Support\Facades\View::composer('layouts.pegawai', function ($view) {
             if (\Illuminate\Support\Facades\Auth::guard('pegawai')->check()) {
                 $view->with('notifPegawai', 0);
+            }
+        });
+
+        // Global Notifikasi Guru
+        \Illuminate\Support\Facades\View::composer('layouts.guru', function ($view) {
+            if (\Illuminate\Support\Facades\Auth::guard('guru')->check()) {
+                $view->with('notifGuru', 0);
             }
         });
     }

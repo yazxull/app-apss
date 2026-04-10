@@ -172,8 +172,8 @@
 {{-- ===== WELCOME BANNER ===== --}}
 <div class="welcome-banner">
     <div>
-        <h2>Halo, {{ Auth::guard('siswa')->user()->nama }} 👋</h2>
-        <p>{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }} &nbsp;·&nbsp; {{ Auth::guard('siswa')->user()->kelas ?? 'Siswa' }}</p>
+        <h2>Halo, {{ Auth::guard('siswa')->user()->nama }}</h2>
+        <p>{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }} &nbsp;·&nbsp; Siswa</p>
     </div>
     <div class="welcome-avatar">
         {{ strtoupper(substr(Auth::guard('siswa')->user()->nama, 0, 2)) }}

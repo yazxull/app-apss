@@ -687,6 +687,12 @@
                     <i class="bi bi-person-badge"></i>
                     <span>Pegawai</span>
                 </a>
+                <a href="{{ route('admin.pengguna.guru.index') }}"
+                    data-page-title="Pengguna - Guru"
+                    class="sidebar-subitem {{ request()->routeIs('admin.pengguna.guru.*') ? 'active' : '' }}">
+                    <i class="bi bi-person-video3"></i>
+                    <span>Guru</span>
+                </a>
             </div>
         </div>
 
@@ -733,6 +739,7 @@
                 elseif (request()->routeIs('admin.kategori.*')) $pageTitle = 'Kategori';
                 elseif (request()->routeIs('admin.pengguna.siswa.*')) $pageTitle = 'Pengguna - Siswa';
                 elseif (request()->routeIs('admin.pengguna.pegawai.*')) $pageTitle = 'Pengguna - Pegawai';
+                elseif (request()->routeIs('admin.pengguna.guru.*')) $pageTitle = 'Pengguna - Guru';
                 elseif (request()->routeIs('admin.akun')) $pageTitle = 'Profile Setting';
             @endphp
             {{ $pageTitle }}

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Siswa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Siswa;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -17,30 +16,31 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'nis' => 'required',
+            'nis'      => 'required|string',
+            'password' => 'required|string',
+        ], [
+            'nis.required'      => 'NIS wajib diisi.',
+            'password.required' => 'Password wajib diisi.',
         ]);
 
-        $siswa = Siswa::where('nis', $request->nis)->first();
-
-        if (!$siswa) {
-            return redirect()
-                ->route('siswa.register')
-                ->with('nis', $request->nis);
+        if (Auth::guard('siswa')->attempt([
+            'nis'      => $request->nis,
+            'password' => $request->password,
+        ])) {
+            $request->session()->regenerate();
+            return redirect()->intended(route('siswa.dashboard'));
         }
 
-        Auth::guard('siswa')->login($siswa);
-        $request->session()->regenerate();
-
-        return redirect()->route('siswa.dashboard');
+        return back()
+            ->withInput($request->only('nis'))
+            ->withErrors(['nis' => 'NIS atau password salah.']);
     }
 
     public function logout(Request $request)
     {
         Auth::guard('siswa')->logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        return redirect()->route('siswa.login');
+        return redirect()->route('login');
     }
 }

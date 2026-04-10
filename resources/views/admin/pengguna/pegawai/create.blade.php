@@ -1,11 +1,10 @@
 @extends('layouts.admin')
-
 @section('title', 'Tambah Pegawai')
 
 @section('content')
 
 <div class="card" style="max-width:600px;">
-    <div class="card-header d-flex align-items-center gap-2">
+    <div class="card-header">
         <span>Tambah Data Pegawai</span>
     </div>
     <div class="card-body p-4">
@@ -24,28 +23,28 @@
             @csrf
 
             <div class="mb-3">
-                <label class="form-label">Nama Lengkap <span class="text-danger"></span></label>
+                <label class="form-label">Nama Lengkap</label>
                 <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror"
                     value="{{ old('nama') }}" placeholder="Nama lengkap pegawai" required>
                 @error('nama')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
 
             <div class="mb-3">
-                <label class="form-label">NIP <span class="text-danger"></span></label>
-                <input type="text" name="nip" class="form-control @error('nip') is-invalid @enderror"
-                    value="{{ old('nip') }}" placeholder="Nomor Induk Pegawai" required>
-                @error('nip')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control @error('username') is-invalid @enderror"
+                    value="{{ old('username') }}" placeholder="Username untuk login" required>
+                @error('username')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Jabatan</label>
                 <input type="text" name="jabatan" class="form-control @error('jabatan') is-invalid @enderror"
-                    value="{{ old('jabatan') }}" placeholder="Contoh: Guru, Staf TU (opsional)">
+                    value="{{ old('jabatan') }}" placeholder="Contoh: Staf TU (opsional)">
                 @error('jabatan')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Password <span class="text-danger"></span></label>
+                <label class="form-label">Password</label>
                 <div class="input-group">
                     <input type="password" name="password" id="password"
                         class="form-control @error('password') is-invalid @enderror"
@@ -58,7 +57,7 @@
             </div>
 
             <div class="mb-4">
-                <label class="form-label">Konfirmasi Password <span class="text-danger"></span></label>
+                <label class="form-label">Konfirmasi Password</label>
                 <div class="input-group">
                     <input type="password" name="password_confirmation" id="password_confirmation"
                         class="form-control" placeholder="Ulangi password" required>

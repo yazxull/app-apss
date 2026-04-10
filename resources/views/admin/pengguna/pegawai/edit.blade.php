@@ -1,11 +1,10 @@
 @extends('layouts.admin')
-
 @section('title', 'Edit Pegawai')
 
 @section('content')
 
 <div class="card" style="max-width:600px;">
-    <div class="card-header d-flex align-items-center gap-2">
+    <div class="card-header">
         <span>Edit Data Pegawai</span>
     </div>
     <div class="card-body p-4">
@@ -24,17 +23,17 @@
             @csrf @method('PUT')
 
             <div class="mb-3">
-                <label class="form-label">Nama Lengkap <span class="text-danger"></span></label>
+                <label class="form-label">Nama Lengkap</label>
                 <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror"
                     value="{{ old('nama', $pegawai->nama) }}" required>
                 @error('nama')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
 
             <div class="mb-3">
-                <label class="form-label">NIP <span class="text-danger"></span></label>
-                <input type="text" name="nip" class="form-control @error('nip') is-invalid @enderror"
-                    value="{{ old('nip', $pegawai->nip) }}" required>
-                @error('nip')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control @error('username') is-invalid @enderror"
+                    value="{{ old('username', $pegawai->username) }}" required>
+                @error('username')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
 
             <div class="mb-3">

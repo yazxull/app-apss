@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th>No</th>
-            <th>Siswa</th>
+            <th>Pelapor</th>
             <th>Kategori</th>
             <th>Keterangan</th>
             <th>Status</th>
@@ -14,7 +14,7 @@
         @forelse ($laporan as $item)
             <tr>
                 <td style="color:#94A3B8; font-size:12px;">{{ $loop->iteration + $laporan->firstItem() - 1 }}</td>
-                <td><span style="font-weight:600;">{{ $item->siswa->nama ?? '-' }}</span></td>
+                <td><span style="font-weight:600;">{{ $item->is_anonim ? 'Pelapor Anonim' : ($item->reporter?->nama ?? $item->siswa?->nama ?? 'Tidak Diketahui') }}</span></td>
                 <td>
                     <span style="background:#EFF6FF; color:#2563EB; font-size:11.5px; font-weight:600; padding:3px 9px; border-radius:5px;">
                         {{ $item->kategori->nama_kategori ?? '-' }}

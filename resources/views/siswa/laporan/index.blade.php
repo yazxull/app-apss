@@ -180,15 +180,15 @@
     </a>
     <a href="{{ route('siswa.laporan.index', array_merge(request()->query(), ['status' => 'menunggu'])) }}"
        class="pill {{ $currentStatus === 'menunggu' ? 'active' : '' }}" style="{{ !$currentStatus ? '' : '' }}">
-        ⏳ Menunggu <span class="pill-count">{{ $stats['menunggu'] }}</span>
+        Menunggu <span class="pill-count">{{ $stats['menunggu'] }}</span>
     </a>
     <a href="{{ route('siswa.laporan.index', array_merge(request()->query(), ['status' => 'proses'])) }}"
        class="pill {{ $currentStatus === 'proses' ? 'active' : '' }}">
-        🔄 Diproses <span class="pill-count">{{ $stats['proses'] }}</span>
+        Diproses <span class="pill-count">{{ $stats['proses'] }}</span>
     </a>
     <a href="{{ route('siswa.laporan.index', array_merge(request()->query(), ['status' => 'selesai'])) }}"
        class="pill {{ $currentStatus === 'selesai' ? 'active' : '' }}">
-        ✅ Selesai <span class="pill-count">{{ $stats['selesai'] }}</span>
+        Selesai <span class="pill-count">{{ $stats['selesai'] }}</span>
     </a>
 </div>
 
@@ -209,7 +209,7 @@
             <option value="">Semua Kategori</option>
             @foreach($kategori as $kat)
                 <option value="{{ $kat->id }}" {{ request('kategori') == $kat->id ? 'selected' : '' }}>
-                    {{ $kat->nama }}
+                    {{ $kat->nama_kategori }}
                 </option>
             @endforeach
         </select>

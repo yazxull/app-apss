@@ -3,10 +3,27 @@
     <div class="card-body p-0">
         <table class="table table-borderless mb-0" style="font-size:13.5px;">
             <tr>
-                <td style="padding:14px 20px; width:180px; color:#64748B; font-weight:600; vertical-align:top;">Nama Siswa</td>
+                <td style="padding:14px 20px; width:180px; color:#64748B; font-weight:600; vertical-align:top;">Nama Pelapor</td>
                 <td style="padding:14px 20px; vertical-align:top; border-left:1px solid #F1F5F9;">
-                    <span style="font-weight:700;">{{ $laporan->is_anonim ? 'Siswa Anonim' : $laporan->siswa->nama }}</span>
-                    <br><small style="color:#94A3B8;">NIS: {{ $laporan->is_anonim ? 'Disembunyikan' : $laporan->siswa->nis }} &nbsp;|&nbsp; Kelas: {{ $laporan->is_anonim ? 'Disembunyikan' : $laporan->siswa->kelas }}</small>
+                    @php
+                        $pelaporModel = $laporan->reporter ?? $laporan->siswa;
+                        $namaPelapor = $laporan->is_anonim ? 'Pelapor Anonim' : ($pelaporModel?->nama ?? 'Tidak Diketahui');
+                        
+                        $identitas = 'Disembunyikan';
+                        if (!$laporan->is_anonim && $pelaporModel) {
+                            if ($pelaporModel instanceof \App\Models\Siswa) {
+                                $identitas = 'NIS: ' . ($pelaporModel->nis ?? '-') . ' &nbsp;|&nbsp; Kelas: ' . ($pelaporModel->kelas ?? '-');
+                            } elseif ($pelaporModel instanceof \App\Models\Guru) {
+                                $identitas = 'NIP: ' . ($pelaporModel->nip ?? '-') . ' &nbsp;|&nbsp; Jabatan: ' . ($pelaporModel->jabatan ?? '-');
+                            } elseif ($pelaporModel instanceof \App\Models\Pegawai) {
+                                $identitas = 'Jabatan: ' . ($pelaporModel->jabatan ?? '-');
+                            } else {
+                                $identitas = 'Tipe Pengguna: ' . class_basename($pelaporModel);
+                            }
+                        }
+                    @endphp
+                    <span style="font-weight:700;">{!! $namaPelapor !!}</span>
+                    <br><small style="color:#94A3B8;">{!! $identitas !!}</small>
                 </td>
             </tr>
             <tr style="background:#FAFBFF;">

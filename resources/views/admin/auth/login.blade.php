@@ -94,7 +94,7 @@
     <div class="auth-field">
         <label class="auth-label">Password</label>
         <div class="auth-input-wrap">
-            <i class="bi bi-key-fill auth-input-icon"></i>
+            <i class="bi bi-lock-fill auth-input-icon"></i>
             <input type="password" id="adminPassword" name="password"
                 class="auth-input @error('password') is-invalid @enderror"
                 placeholder="Masukkan password"

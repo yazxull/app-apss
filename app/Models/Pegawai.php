@@ -11,29 +11,24 @@ class Pegawai extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = [
-        'nama',
-        'nip',
-        'jabatan',
-        'password',
-    ];
+    protected $fillable = ['nama', 'username', 'jabatan', 'password'];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
     {
-        return [
-            'password' => 'hashed',
-        ];
+        return ['password' => 'hashed'];
     }
 
     protected function nama(): Attribute
     {
         return Attribute::make(
-            set: fn($value) => ucwords(strtolower(trim($value))),
+            set: fn($value) => ucwords(strtolower(trim($value)))
         );
+    }
+
+    public function laporan()
+    {
+        return $this->morphMany(LaporanPengaduan::class, 'reporter');
     }
 }

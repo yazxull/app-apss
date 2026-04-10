@@ -536,11 +536,8 @@
 
             <div class="hero-cta">
                 @guest('siswa')
-                    <a href="{{ route('siswa.login') }}" class="btn-hero-primary">
-                        <i class="bi bi-box-arrow-in-right"></i> Masuk Siswa
-                    </a>
-                    <a href="{{ route('siswa.register') }}" class="btn-hero-outline">
-                        Daftar Sekarang <i class="bi bi-arrow-right"></i>
+                    <a href="{{ route('login') }}" class="btn-hero-primary">
+                        <i class="bi bi-box-arrow-in-right"></i> Masuk
                     </a>
                 @endguest
                 @auth('siswa')
@@ -644,16 +641,6 @@
         </div>
     </div>
 </section>
-
-<!-- ===== CTA BOTTOM ===== -->
-@guest('siswa')
-<section class="cta-section">
-    <div class="cta-inner">
-        <h2 class="cta-title">Siap Melapor Sekarang?</h2>
-        <p class="cta-desc">Daftarkan akunmu dan mulai berkontribusi menjaga kualitas fasilitas sekolah bersama-sama.</p>
-    </div>
-</section>
-@endguest
 
 <!-- ===== FOOTER ===== -->
 <footer class="site-footer">

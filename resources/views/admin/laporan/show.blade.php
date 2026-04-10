@@ -25,7 +25,7 @@
                         <div class="mb-3 {{ $komen->sender_type == 'admin' ? 'd-flex flex-column align-items-end' : '' }}">
                             <div style="display:inline-block; max-width:85%; padding: 10px 14px; border-radius: 12px; {{ $komen->sender_type == 'admin' ? 'background:#EFF6FF; color:#1D4ED8;' : 'background:#F8FAFC; border: 1px solid #E2E8F0; color:#0F172A;' }}">
                                 <small style="font-weight:700; font-size:11px; display:block; margin-bottom:3px;">
-                                    {{ $komen->sender_type == 'admin' ? 'Admin' : ($laporan->is_anonim ? 'Siswa Anonim' : $laporan->siswa->nama) }}
+                                    {{ $komen->sender_type == 'admin' ? 'Admin' : ($laporan->is_anonim ? 'Pelapor Anonim' : ($laporan->reporter?->nama ?? $laporan->siswa?->nama ?? 'Pelapor')) }}
                                 </small>
                                 <span style="font-size:13px;">{{ $komen->pesan }}</span>
                                 <small style="display:block; font-size:10px; color:#94A3B8; margin-top:4px;">{{ $komen->created_at->format('d/m/Y H:i') }}</small>

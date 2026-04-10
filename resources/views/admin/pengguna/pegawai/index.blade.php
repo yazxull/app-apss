@@ -22,14 +22,14 @@
             <table class="table" style="font-size:13px;">
                 <thead>
                     <tr>
-                        <th>Baris</th><th>NIP</th><th>Nama</th><th>Keterangan</th>
+                        <th>Baris</th><th>Username</th><th>Nama</th><th>Keterangan</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach(session('import_pegawai_gagal') as $item)
                     <tr>
                         <td>{{ $item['baris'] }}</td>
-                        <td>{{ $item['nip'] }}</td>
+                        <td>{{ $item['username'] }}</td>
                         <td>{{ $item['nama'] }}</td>
                         <td style="color:#DC2626;">{{ $item['pesan'] }}</td>
                     </tr>
@@ -47,24 +47,35 @@
         <div class="ms-auto d-flex gap-2 flex-wrap">
             <form method="GET" action="{{ route('admin.pengguna.pegawai.index') }}" class="d-flex gap-2">
                 <input type="text" name="search" class="form-control form-control-sm"
-                    placeholder="Cari NIP / Nama / Jabatan..." value="{{ request('search') }}" style="width:240px;">
+                    placeholder="Cari Username / Nama / Jabatan..." value="{{ request('search') }}" style="width:240px;">
                 @if(request('search'))
                     <a href="{{ route('admin.pengguna.pegawai.index') }}" class="btn btn-sm btn-secondary">Reset</a>
                 @endif
             </form>
 
             {{-- Download Template --}}
-            <a href="{{ route('admin.pengguna.pegawai.template') }}" class="btn btn-sm btn-success">
-                <i class="bi bi-file-earmark-excel me-1"></i>Unduh Format Excel
+            <a href="{{ route('admin.pengguna.pegawai.template') }}" class="btn btn-success d-inline-flex align-items-center justify-content-center" style="line-height: 1; height: 36px; font-size: 13px; font-weight: 600; padding: 0 16px; border-radius: 8px;">
+                <i class="bi bi-file-earmark-excel me-1" style="font-size: 14px;"></i>Unduh Format Excel
             </a>
 
             {{-- Import Excel --}}
-            <button type="button" class="btn btn-sm btn-warning text-white" data-bs-toggle="modal" data-bs-target="#modalImportPegawai">
-                <i class="bi bi-upload me-1"></i>Import Excel
+            <button type="button" class="btn btn-warning text-white d-inline-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#modalImportPegawai" style="line-height: 1; height: 36px; font-size: 13px; font-weight: 600; padding: 0 16px; border-radius: 8px;">
+                <i class="bi bi-upload me-1" style="font-size: 14px;"></i>Import Excel
             </button>
+            
+            {{-- Dropdown Export --}}
+            <div class="dropdown">
+                <button class="btn dropdown-toggle d-inline-flex align-items-center justify-content-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background:#0F172A; border-color:#0F172A; color:white; line-height: 1; height: 36px; font-size: 13px; font-weight: 600; padding: 0 16px; border-radius: 8px;">
+                    <i class="bi bi-download me-1" style="font-size: 14px;"></i>Export Data
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="font-size:13px; border-radius:10px; border:1px solid #E2E8F0;">
+                    <li><a class="dropdown-item py-2" href="{{ route('admin.pengguna.pegawai.export.excel') }}"><i class="bi bi-file-earmark-excel text-success me-2"></i>Export Excel (.xlsx)</a></li>
+                    <li><a class="dropdown-item py-2" href="{{ route('admin.pengguna.pegawai.export.pdf') }}"><i class="bi bi-file-earmark-pdf text-danger me-2"></i>Export PDF (.pdf)</a></li>
+                </ul>
+            </div>
 
-            <a href="{{ route('admin.pengguna.pegawai.create') }}" class="btn btn-sm btn-primary">
-                <i class="bi bi-plus-lg me-1"></i>Tambah Pegawai
+            <a href="{{ route('admin.pengguna.pegawai.create') }}" class="btn btn-primary d-inline-flex align-items-center justify-content-center" style="line-height: 1; height: 36px; font-size: 13px; font-weight: 600; padding: 0 16px; border-radius: 8px;">
+                <i class="bi bi-plus-lg me-1" style="font-size: 14px;"></i>Tambah Pegawai
             </a>
         </div>
     </div>
@@ -74,7 +85,7 @@
                 <thead>
                     <tr>
                         <th width="60">No</th>
-                        <th>NIP</th>
+                        <th>Username</th>
                         <th>Nama</th>
                         <th>Jabatan</th>
                         <th>Dibuat</th>
@@ -87,7 +98,7 @@
                             <td style="color:#94A3B8;">{{ $pegawais->firstItem() + $loop->index }}</td>
                             <td>
                                 <span class="badge" style="background:#F5F3FF;color:#7C3AED;font-size:12px;font-weight:700;padding:5px 10px;border-radius:7px;">
-                                    {{ $item->nip }}
+                                    {{ $item->username }}
                                 </span>
                             </td>
                             <td><span style="font-weight:600;">{{ $item->nama }}</span></td>

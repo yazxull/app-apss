@@ -17,6 +17,10 @@
         <i class="bi bi-mortarboard-fill"></i>
         <span>Siswa</span>
     </button>
+    <button type="button" class="role-btn" id="btnGuru" onclick="switchRole('guru')">
+        <i class="bi bi-person-video3"></i>
+        <span>Guru</span>
+    </button>
     <button type="button" class="role-btn" id="btnPegawai" onclick="switchRole('pegawai')">
         <i class="bi bi-person-badge-fill"></i>
         <span>Pegawai</span>
@@ -73,31 +77,21 @@
             @enderror
         </div>
 
-        <button type="submit" class="auth-submit btn-siswa">
+        <button type="submit" class="auth-submit btn-primary-blue">
             <i class="bi bi-box-arrow-in-right"></i> Masuk sebagai Siswa
         </button>
     </form>
-
-    <div class="auth-divider">
-        <div class="auth-divider-line"></div>
-        <div class="auth-divider-text">Belum punya akun?</div>
-        <div class="auth-divider-line"></div>
-    </div>
-
-    <div class="auth-bottom-link">
-        Belum terdaftar? <a href="{{ route('siswa.register') }}">Daftar Sekarang <i class="bi bi-arrow-right"></i></a>
-    </div>
 </div>
 
-{{-- Form Login Pegawai --}}
-<div id="formPegawai" style="display: none;">
-    <form method="POST" action="{{ route('pegawai.login') }}">
+{{-- Form Login Guru --}}
+<div id="formGuru" style="display: none;">
+    <form method="POST" action="{{ route('guru.login') }}">
         @csrf
 
         <div class="auth-field">
-            <label class="auth-label">Nomor Induk Pegawai (NIP)</label>
+            <label class="auth-label">NIP Guru</label>
             <div class="auth-input-wrap">
-                <i class="bi bi-person-badge-fill auth-input-icon"></i>
+                <i class="bi bi-person-fill auth-input-icon"></i>
                 <input
                     type="text"
                     name="nip"
@@ -130,17 +124,64 @@
             @enderror
         </div>
 
-        <button type="submit" class="auth-submit btn-pegawai">
+        <button type="submit" class="auth-submit btn-primary-blue">
+            <i class="bi bi-box-arrow-in-right"></i> Masuk sebagai Guru
+        </button>
+    </form>
+</div>
+
+{{-- Form Login Pegawai --}}
+<div id="formPegawai" style="display: none;">
+    <form method="POST" action="{{ route('pegawai.login') }}">
+        @csrf
+
+        <div class="auth-field">
+            <label class="auth-label">Username</label>
+            <div class="auth-input-wrap">
+                <i class="bi bi-person-fill auth-input-icon"></i>
+                <input
+                    type="text"
+                    name="username"
+                    class="auth-input @error('username') is-invalid @enderror"
+                    placeholder="Masukkan username kamu..."
+                    value="{{ old('username') }}"
+                    autocomplete="off">
+            </div>
+            @error('username')
+                <div class="auth-error">
+                    <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                </div>
+            @enderror
+        </div>
+
+        <div class="auth-field">
+            <label class="auth-label">Password</label>
+            <div class="auth-input-wrap">
+                <i class="bi bi-lock-fill auth-input-icon"></i>
+                <input
+                    type="password"
+                    name="password"
+                    class="auth-input @error('password') is-invalid @enderror"
+                    placeholder="Masukkan password kamu...">
+            </div>
+            @error('password')
+                <div class="auth-error">
+                    <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                </div>
+            @enderror
+        </div>
+
+        <button type="submit" class="auth-submit btn-primary-blue">
             <i class="bi bi-box-arrow-in-right"></i> Masuk sebagai Pegawai
         </button>
     </form>
 </div>
 
-{{-- Style tambahan --}}
+{{-- Style --}}
 <style>
     .role-selector {
         display: flex;
-        gap: 12px;
+        gap: 10px;
         margin-bottom: 24px;
     }
 
@@ -150,19 +191,19 @@
         flex-direction: column;
         align-items: center;
         gap: 6px;
-        padding: 14px 10px;
+        padding: 14px 8px;
         border: 2px solid #e2e8f0;
         border-radius: 12px;
         background: #f8fafc;
         color: #94a3b8;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
     }
 
     .role-btn i {
-        font-size: 24px;
+        font-size: 22px;
     }
 
     .role-btn:hover {
@@ -170,33 +211,19 @@
         color: #64748b;
     }
 
-    /* Active state siswa */
-    .role-btn.active#btnSiswa {
-        border-color: #16a34a;
-        background: #f0fdf4;
-        color: #16a34a;
-    }
-
-    /* Active state pegawai */
+    .role-btn.active#btnSiswa,
+    .role-btn.active#btnGuru,
     .role-btn.active#btnPegawai {
         border-color: #2563eb;
         background: #eff6ff;
         color: #2563eb;
     }
 
-    .btn-siswa {
-        background: #16a34a !important;
-    }
-
-    .btn-siswa:hover {
-        background: #15803d !important;
-    }
-
-    .btn-pegawai {
+    .btn-primary-blue {
         background: #2563eb !important;
     }
 
-    .btn-pegawai:hover {
+    .btn-primary-blue:hover {
         background: #1d4ed8 !important;
     }
 </style>
@@ -204,26 +231,28 @@
 {{-- Script switch role --}}
 <script>
     function switchRole(role) {
-        const formSiswa   = document.getElementById('formSiswa');
-        const formPegawai = document.getElementById('formPegawai');
-        const btnSiswa    = document.getElementById('btnSiswa');
-        const btnPegawai  = document.getElementById('btnPegawai');
+        const forms = {
+            siswa:   document.getElementById('formSiswa'),
+            guru:    document.getElementById('formGuru'),
+            pegawai: document.getElementById('formPegawai'),
+        };
+        const btns = {
+            siswa:   document.getElementById('btnSiswa'),
+            guru:    document.getElementById('btnGuru'),
+            pegawai: document.getElementById('btnPegawai'),
+        };
 
-        if (role === 'siswa') {
-            formSiswa.style.display   = 'block';
-            formPegawai.style.display = 'none';
-            btnSiswa.classList.add('active');
-            btnPegawai.classList.remove('active');
-        } else {
-            formSiswa.style.display   = 'none';
-            formPegawai.style.display = 'block';
-            btnPegawai.classList.add('active');
-            btnSiswa.classList.remove('active');
-        }
+        Object.values(forms).forEach(f => f.style.display = 'none');
+        Object.values(btns).forEach(b => b.classList.remove('active'));
+
+        forms[role].style.display = 'block';
+        btns[role].classList.add('active');
     }
 
-    // Auto-switch ke pegawai jika ada error NIP dari session
+    // Auto-switch berdasarkan old input / error
     @if(old('nip') || $errors->has('nip'))
+        switchRole('guru');
+    @elseif(old('username') || $errors->has('username'))
         switchRole('pegawai');
     @endif
 </script>

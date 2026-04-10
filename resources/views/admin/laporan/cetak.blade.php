@@ -204,7 +204,7 @@
             <tr>
                 <th class="text-center" style="width:30px;">No</th>
                 <th style="width:90px;">Tanggal</th>
-                <th style="width:110px;">Siswa</th>
+                <th style="width:110px;">Pelapor</th>
                 <th style="width:90px;">Kategori</th>
                 <th>Keterangan</th>
                 <th style="width:90px;">Lokasi</th>
@@ -216,7 +216,7 @@
                 <tr>
                     <td class="text-center">{{ $key + 1 }}</td>
                     <td>{{ $item->created_at->format('d/m/Y') }}<br><small style="color:#666;">{{ $item->created_at->format('H:i') }}</small></td>
-                    <td>{{ $item->is_anonim ? 'Anonim' : ($item->siswa->nama ?? '-') }}</td>
+                    <td>{{ $item->is_anonim ? 'Anonim' : ($item->reporter?->nama ?? $item->siswa?->nama ?? '-') }}</td>
                     <td>{{ $item->kategori->nama_kategori ?? '-' }}</td>
                     <td>{{ $item->ket }}</td>
                     <td>{{ $item->lokasi ?? '-' }}</td>

@@ -53,14 +53,6 @@
                         <x-textarea label="Keterangan" name="ket" placeholder="Jelaskan detail kerusakan atau masalah yang terjadi..." rows="5" />
                     </div>
 
-                    <div class="mb-4 d-flex align-items-start gap-2" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:12px 14px;">
-                        <input class="form-check-input mt-0" type="checkbox" name="is_anonim" id="is_anonim" style="margin-top:1px; flex-shrink:0;">
-                        <div>
-                            <label class="form-check-label" for="is_anonim" style="font-weight:600; cursor:pointer;">Kirim Secara Anonim</label>
-                            <div style="font-size:12px; color:#94A3B8; margin-top:2px;">Nama Anda akan disembunyikan dari admin</div>
-                        </div>
-                    </div>
-
                     <button class="btn btn-primary w-100">
                         <i class="bi bi-send me-2"></i>Kirim Laporan
                     </button>

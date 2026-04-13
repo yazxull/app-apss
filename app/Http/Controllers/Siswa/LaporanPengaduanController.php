@@ -127,7 +127,6 @@ class LaporanPengaduanController extends Controller
             'ket'         => $request->ket,
             'lokasi'      => $request->lokasi,
             'foto'        => $fotoName,
-            'is_anonim'   => $request->has('is_anonim') ? true : false,
         ]);
 
         return redirect()

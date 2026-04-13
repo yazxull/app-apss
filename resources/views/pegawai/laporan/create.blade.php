@@ -70,15 +70,7 @@
                         @error('ket')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
 
-                    <div class="mb-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="is_anonim" id="is_anonim" {{ old('is_anonim') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="is_anonim" style="font-size:13.5px;">
-                                Kirim sebagai <strong>Anonim</strong>
-                                <span style="font-size:12px; color:#94A3B8; display:block;">Nama Anda tidak akan ditampilkan.</span>
-                            </label>
-                        </div>
-                    </div>
+
 
                     <button class="btn btn-primary w-100">
                         <i class="bi bi-send me-2"></i>Kirim Laporan

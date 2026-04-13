@@ -179,6 +179,11 @@
                     <i class="bi bi-file-earmark-text-fill"></i> Buat Laporan
                 </a>
             </li>
+            <li class="nav-link-item">
+                <a href="{{ route('guru.tanggapan.index') }}" class="{{ request()->routeIs('guru.tanggapan.*') ? 'active' : '' }}">
+                    <i class="bi bi-chat-left-text-fill"></i> Tanggapan
+                </a>
+            </li>
         </ul>
 
         <div class="nav-right">
@@ -242,6 +247,9 @@
     </a>
     <a href="{{ route('guru.laporan.index') }}" class="nav-mobile-item">
         <i class="bi bi-file-earmark-text-fill"></i> Laporan
+    </a>
+    <a href="{{ route('guru.tanggapan.index') }}" class="nav-mobile-item">
+        <i class="bi bi-chat-left-text-fill"></i> Tanggapan Aplikasi
     </a>
     <a href="{{ route('guru.akun') }}" class="nav-mobile-item">
         <i class="bi bi-person-circle"></i> Akun Saya

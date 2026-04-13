@@ -22,7 +22,8 @@
     }
     .auth-left-content {
         position: relative; z-index: 2;
-        display: flex; flex-direction: column; height: 100%; justify-content: space-between;
+        display: flex; flex-direction: column; height: 100%;
+        justify-content: flex-start; gap: 80px;
     }
     .auth-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
     .auth-brand-icon {
@@ -45,20 +46,7 @@
     .auth-left-title .accent { color: #60A5FA; }
     .auth-left-desc { font-size: 14.5px; color: rgba(255,255,255,0.65); line-height: 1.7; max-width: 360px; }
 
-    .auth-left-quote {
-        background: rgba(255,255,255,0.08); backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 20px 22px;
-    }
-    .auth-left-quote-text   { font-size: 14px; color: rgba(255,255,255,0.82); line-height: 1.65; font-style: italic; margin-bottom: 14px; }
-    .auth-left-quote-author { display: flex; align-items: center; gap: 10px; }
-    .auth-left-quote-avatar {
-        width: 34px; height: 34px; border-radius: 9px;
-        background: linear-gradient(135deg, #2563EB, #60A5FA);
-        display: flex; align-items: center; justify-content: center;
-        color: white; font-size: 13px; font-weight: 700; flex-shrink: 0;
-    }
-    .auth-left-quote-name { font-size: 13px; font-weight: 700; color: white; }
-    .auth-left-quote-role { font-size: 11.5px; color: rgba(255,255,255,0.5); }
+
 
     /* RIGHT */
     .auth-right {
@@ -146,16 +134,6 @@
                 <div class="auth-left-badge"><i class="bi bi-stars"></i> Platform Pengaduan Digital</div>
                 <h2 class="auth-left-title">Suaramu <span class="accent">Membangun</span><br>Sekolah Lebih Baik</h2>
                 <p class="auth-left-desc">Laporkan kerusakan fasilitas sekolah dengan mudah dan pantau progresnya secara real-time bersama kami.</p>
-            </div>
-            <div class="auth-left-quote">
-                <div class="auth-left-quote-text">"Aplikasi ini memudahkan saya melaporkan kerusakan sarana sekolah. Prosesnya cepat dan admin merespons dengan baik!"</div>
-                <div class="auth-left-quote-author">
-                    <div class="auth-left-quote-avatar">AS</div>
-                    <div>
-                        <div class="auth-left-quote-name">Ahmad Siswa</div>
-                        <div class="auth-left-quote-role">Siswa Kelas XI</div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

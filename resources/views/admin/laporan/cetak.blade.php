@@ -203,12 +203,13 @@
         <thead>
             <tr>
                 <th class="text-center" style="width:30px;">No</th>
-                <th style="width:90px;">Tanggal</th>
-                <th style="width:110px;">Pelapor</th>
-                <th style="width:90px;">Kategori</th>
+                <th style="width:80px;">Tanggal</th>
+                <th style="width:60px;">Pelapor</th>
+                <th style="width:110px;">Nama Pelapor</th>
+                <th style="width:80px;">Kategori</th>
                 <th>Keterangan</th>
-                <th style="width:90px;">Lokasi</th>
-                <th style="width:70px;" class="text-center">Status</th>
+                <th style="width:80px;">Lokasi</th>
+                <th style="width:60px;" class="text-center">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -216,7 +217,8 @@
                 <tr>
                     <td class="text-center">{{ $key + 1 }}</td>
                     <td>{{ $item->created_at->format('d/m/Y') }}<br><small style="color:#666;">{{ $item->created_at->format('H:i') }}</small></td>
-                    <td>{{ $item->is_anonim ? 'Anonim' : ($item->reporter?->nama ?? $item->siswa?->nama ?? '-') }}</td>
+                    <td>{{ ucfirst($item->reporter_type ?? 'siswa') }}</td>
+                    <td>{{ $item->reporter?->nama ?? $item->siswa?->nama ?? '-' }}</td>
                     <td>{{ $item->kategori->nama_kategori ?? '-' }}</td>
                     <td>{{ $item->ket }}</td>
                     <td>{{ $item->lokasi ?? '-' }}</td>
@@ -235,7 +237,7 @@
 
             @if($grandTotal > 0)
             <tr class="total-row">
-                <td colspan="6" style="text-align:right;">Total Laporan:</td>
+                <td colspan="7" style="text-align:right;">Total Laporan:</td>
                 <td class="text-center">{{ $grandTotal }}</td>
             </tr>
             @endif

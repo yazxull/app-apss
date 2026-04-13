@@ -17,7 +17,6 @@ class LaporanPengaduan extends Model
         'ket',
         'lokasi',
         'foto',
-        'is_anonim',
     ];
 
     // Relasi lama (tetap dipertahankan untuk kompatibilitas)

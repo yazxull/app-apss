@@ -20,6 +20,7 @@ class AkunController extends Controller
 
     public function update(Request $request)
     {
+        /** @var \App\Models\Siswa $siswa */
         $siswa = Auth::guard('siswa')->user();
 
         $request->validate([
@@ -46,6 +47,7 @@ class AkunController extends Controller
             'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)],
         ]);
 
+        /** @var \App\Models\Siswa $siswa */
         $siswa = Auth::guard('siswa')->user();
 
         if (!Hash::check($request->password_lama, $siswa->password)) {

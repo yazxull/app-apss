@@ -286,9 +286,7 @@
                                 <div style="font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                                     {{ Str::limit($item->ket, 55) }}
                                 </div>
-                                @if($item->is_anonim)
-                                    <span class="badge-anonim"><i class="bi bi-incognito me-1"></i>Anonim</span>
-                                @endif
+                                </div>
                             </td>
                             <td>
                                 <span style="color:var(--text-secondary);">{{ $item->kategori->nama_kategori ?? '-' }}</span>

@@ -491,8 +491,13 @@
                 </a>
             </li>
             <li class="nav-link-item">
-                <a href="{{ route('siswa.laporan.index') }}">
+                <a href="{{ route('siswa.laporan.index') }}" class="{{ request()->routeIs('siswa.laporan.*') ? 'active' : '' }}">
                     <i class="bi bi-file-earmark-text-fill"></i> Buat Laporan
+                </a>
+            </li>
+            <li class="nav-link-item">
+                <a href="{{ route('siswa.tanggapan.index') }}" class="{{ request()->routeIs('siswa.tanggapan.*') ? 'active' : '' }}">
+                    <i class="bi bi-chat-left-text-fill"></i> Tanggapan
                 </a>
             </li>
         </ul>
@@ -576,8 +581,11 @@
         <a href="{{ route('siswa.dashboard') }}" class="nav-mobile-item">
             <i class="bi bi-grid-1x2-fill"></i> Dashboard
         </a>
-        <a href="{{ route('siswa.dashboard') }}" class="nav-mobile-item">
+        <a href="{{ route('siswa.laporan.index') }}" class="nav-mobile-item">
             <i class="bi bi-file-earmark-text-fill"></i> Riwayat Laporan
+        </a>
+        <a href="{{ route('siswa.tanggapan.index') }}" class="nav-mobile-item">
+            <i class="bi bi-chat-left-text-fill"></i> Tanggapan Aplikasi
         </a>
         <a href="{{ route('siswa.laporan.create') }}" class="nav-mobile-item primary">
             <i class="bi bi-plus-circle-fill"></i> Buat Laporan

@@ -512,6 +512,75 @@
         .cta-section { padding: 56px 20px; }
         .cta-title { font-size: 26px; }
     }
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonial-section {
+        padding: 80px 32px;
+        background: #ffffff;
+    }
+    .testimonial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 28px;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .testimonial-card {
+        background: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        border-radius: 20px;
+        padding: 32px;
+        position: relative;
+        transition: all 0.3s;
+    }
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border-color: #CBD5E1;
+    }
+    .testimonial-quote {
+        font-size: 15px;
+        line-height: 1.8;
+        color: #334155;
+        margin-bottom: 24px;
+        font-style: italic;
+    }
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .testimonial-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #2563EB, #60A5FA);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 16px;
+    }
+    .testimonial-name {
+        font-size: 14px;
+        font-weight: 800;
+        color: #0F172A;
+        margin-bottom: 2px;
+    }
+    .testimonial-role {
+        font-size: 12px;
+        color: #64748B;
+        font-weight: 600;
+    }
+    .quote-icon {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        font-size: 32px;
+        color: #E2E8F0;
+        opacity: 0.5;
+    }
 </style>
 
 <!-- ===== HERO ===== -->
@@ -638,9 +707,60 @@
             </div>
             <div class="feature-title">Respon dari Admin</div>
             <div class="feature-desc">Dapatkan tanggapan dan pembaruan langsung dari admin sekolah terkait laporan yang kamu kirimkan.</div>
-        </div>
     </div>
 </section>
+
+@if(isset($tanggapan) && $tanggapan->count() > 0)
+@php
+    $mask = function($str) {
+        if (!$str) return '***';
+        $parts = explode(' ', $str);
+        $maskedParts = array_map(function($part) {
+            if (strlen($part) <= 1) return $part;
+            return substr($part, 0, 1) . str_repeat('*', min(3, strlen($part) - 1));
+        }, $parts);
+        return implode(' ', $maskedParts);
+    };
+@endphp
+<!-- ===== TESTIMONIALS ===== -->
+<section class="testimonial-section">
+    <div class="section-header">
+        <span class="section-eyebrow">Tanggapan Pengguna</span>
+        <h2 class="section-title">Apa Kata Mereka?</h2>
+        <p class="section-desc">Kesan dan pesan dari para pengguna aplikasi terkait kenyamanan dan efektivitas sistem pengaduan kami.</p>
+    </div>
+    
+    <div class="testimonial-grid">
+        @foreach($tanggapan as $item)
+            @php
+                $roleName = 'Warga Sekolah';
+                if ($item->user_type === 'App\Models\Siswa') {
+                    $roleName = 'Siswa';
+                } elseif ($item->user_type === 'App\Models\Guru') {
+                    $roleName = 'Guru';
+                } elseif ($item->user_type === 'App\Models\Pegawai') {
+                    $roleName = 'Pegawai';
+                }
+            @endphp
+            <div class="testimonial-card">
+                <i class="bi bi-quote quote-icon"></i>
+                <div class="testimonial-quote">
+                    "{{ $item->catatan }}"
+                </div>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" style="background: linear-gradient(135deg, #64748B, #94A3B8);">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div>
+                        <div class="testimonial-name">Pengguna Terverifikasi</div>
+                        <div class="testimonial-role">{{ $roleName }}</div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</section>
+@endif
 
 <!-- ===== FOOTER ===== -->
 <footer class="site-footer">

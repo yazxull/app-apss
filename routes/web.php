@@ -32,12 +32,18 @@ use App\Http\Controllers\Admin\GuruController as AdminGuruController;
 use App\Http\Controllers\Admin\SiswaImportController;
 use App\Http\Controllers\Admin\PegawaiImportController;
 use App\Http\Controllers\Admin\GuruImportController;
+use App\Http\Controllers\UserTanggapanController;
+use App\Http\Controllers\Admin\AdminTanggapanController;
 
 // ─────────────────────────────────────────────
 // Welcome
 // ─────────────────────────────────────────────
 Route::get('/', function () {
-    return view('welcome');
+    $tanggapan = \App\Models\TanggapanAplikasi::with('user')
+        ->where('is_tampil', true)
+        ->latest()
+        ->get();
+    return view('welcome', compact('tanggapan'));
 })->name('welcome');
 
 // ─────────────────────────────────────────────
@@ -65,6 +71,8 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
         Route::post('laporan/{aspirasi}/feedback', [LaporanPengaduanController::class, 'feedback'])->name('laporan.feedback');
         Route::post('laporan/{laporan}/komentar', [LaporanPengaduanController::class, 'storeKomentar'])->name('laporan.komentar');
         Route::resource('laporan', LaporanPengaduanController::class)->except(['edit', 'update']);
+        Route::get('tanggapan', [UserTanggapanController::class, 'index'])->name('tanggapan.index');
+        Route::post('tanggapan', [UserTanggapanController::class, 'store'])->name('tanggapan.store');
     });
 });
 
@@ -90,6 +98,8 @@ Route::prefix('pegawai')->name('pegawai.')->group(function () {
         Route::post('laporan/{aspirasi}/feedback', [PegawaiLaporanController::class, 'feedback'])->name('laporan.feedback');
         Route::post('laporan/{laporan}/komentar', [PegawaiLaporanController::class, 'storeKomentar'])->name('laporan.komentar');
         Route::resource('laporan', PegawaiLaporanController::class)->except(['edit', 'update']);
+        Route::get('tanggapan', [UserTanggapanController::class, 'index'])->name('tanggapan.index');
+        Route::post('tanggapan', [UserTanggapanController::class, 'store'])->name('tanggapan.store');
     });
 });
 
@@ -115,6 +125,8 @@ Route::prefix('guru')->name('guru.')->group(function () {
         Route::post('laporan/{aspirasi}/feedback', [GuruLaporanController::class, 'feedback'])->name('laporan.feedback');
         Route::post('laporan/{laporan}/komentar', [GuruLaporanController::class, 'storeKomentar'])->name('laporan.komentar');
         Route::resource('laporan', GuruLaporanController::class)->except(['edit', 'update']);
+        Route::get('tanggapan', [UserTanggapanController::class, 'index'])->name('tanggapan.index');
+        Route::post('tanggapan', [UserTanggapanController::class, 'store'])->name('tanggapan.store');
     });
 });
 
@@ -140,6 +152,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('laporan/cetak', [LaporanAspirasiController::class, 'cetakPdf'])->name('laporan.cetak');
         Route::post('laporan/{laporan}/komentar', [LaporanAspirasiController::class, 'storeKomentar'])->name('laporan.komentar');
         Route::resource('laporan', LaporanAspirasiController::class)->only(['index', 'show', 'update']);
+        Route::resource('tanggapan-pengguna', AdminTanggapanController::class)->only(['index', 'destroy']);
+        Route::post('tanggapan-pengguna/{tanggapan}/toggle-status', [AdminTanggapanController::class, 'toggleStatus'])->name('tanggapan-pengguna.toggle-status');
 
         // ── Pengguna ──────────────────────────────────────────────────────
         Route::prefix('pengguna')->name('pengguna.')->group(function () {

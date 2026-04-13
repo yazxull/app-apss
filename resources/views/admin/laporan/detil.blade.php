@@ -7,10 +7,10 @@
                 <td style="padding:14px 20px; vertical-align:top; border-left:1px solid #F1F5F9;">
                     @php
                         $pelaporModel = $laporan->reporter ?? $laporan->siswa;
-                        $namaPelapor = $laporan->is_anonim ? 'Pelapor Anonim' : ($pelaporModel?->nama ?? 'Tidak Diketahui');
+                        $namaPelapor = $pelaporModel?->nama ?? 'Tidak Diketahui';
                         
-                        $identitas = 'Disembunyikan';
-                        if (!$laporan->is_anonim && $pelaporModel) {
+                        $identitas = 'Tidak Diketahui';
+                        if ($pelaporModel) {
                             if ($pelaporModel instanceof \App\Models\Siswa) {
                                 $identitas = 'NIS: ' . ($pelaporModel->nis ?? '-') . ' &nbsp;|&nbsp; Kelas: ' . ($pelaporModel->kelas ?? '-');
                             } elseif ($pelaporModel instanceof \App\Models\Guru) {

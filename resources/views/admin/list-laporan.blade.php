@@ -9,7 +9,8 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Siswa</th>
+                        <th>Pelapor</th>
+                        <th>Nama Pelapor</th>
                         <th>Kategori</th>
                         <th>Status</th>
                         <th>Tanggal</th>
@@ -20,7 +21,12 @@
                     @forelse ($laporanTerbaru ?? [] as $item)
                     <tr>
                         <td style="color:#94A3B8; font-size:12px;">{{ $loop->iteration }}</td>
-                        <td><span style="font-weight:600;">{{ $item->siswa->nama ?? '-' }}</span></td>
+                        <td>
+                            <span class="badge border text-dark" style="background:#F8FAFC; border-color:#E2E8F0 !important; font-size:11px;">
+                                {{ ucfirst($item->reporter_type ?? 'siswa') }}
+                            </span>
+                        </td>
+                        <td><span style="font-weight:600;">{{ $item->reporter?->nama ?? $item->siswa?->nama ?? 'Tidak Diketahui' }}</span></td>
                         <td>{{ $item->kategori->nama_kategori ?? '-' }}</td>
                         <td>
                             @if($item->aspirasi?->status === 'selesai')

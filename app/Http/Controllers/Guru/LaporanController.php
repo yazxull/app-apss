@@ -89,6 +89,7 @@ class LaporanController extends Controller
             $foto->move(public_path('uploads/laporan'), $fotoName);
         }
 
+        /** @var \App\Models\Guru $user */
         $user = $this->getUser();
 
         // Gunakan relasi create() agar morph type mengikuti morph map ('guru')
@@ -97,7 +98,6 @@ class LaporanController extends Controller
             'ket'         => $request->ket,
             'lokasi'      => $request->lokasi,
             'foto'        => $fotoName,
-            'is_anonim'   => $request->has('is_anonim'),
         ]);
 
         return redirect()->route('guru.laporan.index')->with('success', 'Laporan berhasil dikirim.');
@@ -106,7 +106,7 @@ class LaporanController extends Controller
     public function show(LaporanPengaduan $laporan)
     {
         $user = $this->getUser();
-        if ($laporan->reporter_type !== $user->getMorphClass() || $laporan->reporter_id !== $user->id) {
+        if ($laporan->reporter_type !== 'guru' || $laporan->reporter_id !== $user->id) {
             abort(403);
         }
 
@@ -118,7 +118,7 @@ class LaporanController extends Controller
     public function destroy(LaporanPengaduan $laporan)
     {
         $user = $this->getUser();
-        if ($laporan->reporter_type !== $user->getMorphClass() || $laporan->reporter_id !== $user->id) {
+        if ($laporan->reporter_type !== 'guru' || $laporan->reporter_id !== $user->id) {
             abort(403);
         }
 
@@ -131,7 +131,7 @@ class LaporanController extends Controller
         // Pastikan aspirasi ini milik laporan user yang login
         $user = $this->getUser();
         $laporan = $aspirasi->laporan;
-        if ($laporan->reporter_type !== $user->getMorphClass() || $laporan->reporter_id !== $user->id) {
+        if ($laporan->reporter_type !== 'guru' || $laporan->reporter_id !== $user->id) {
             abort(403);
         }
 
@@ -148,6 +148,7 @@ class LaporanController extends Controller
 
     public function storeKomentar(Request $request, LaporanPengaduan $laporan)
     {
+        /** @var \App\Models\Guru $user */
         $user = $this->getUser();
         if ($laporan->reporter_type !== $user->getMorphClass() || $laporan->reporter_id !== $user->id) {
             abort(403);

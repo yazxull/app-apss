@@ -118,6 +118,9 @@
     }
 
     .admin-sidebar.collapsed .sidebar-brand-text { opacity: 0; width: 0; pointer-events: none; }
+    .admin-sidebar.collapsed .sidebar-brand { justify-content: center; padding: 0; }
+    .admin-sidebar.collapsed .sidebar-brand-left { width: 100%; justify-content: center; gap: 0; }
+    .admin-sidebar.collapsed .sidebar-toggle-btn { display: none; } /* Hide toggle btn in collapsed for better centering of brand icon */
 
     /* Toggle Btn */
     .sidebar-toggle-btn {
@@ -164,7 +167,16 @@
         transition: all var(--transition);
         border: 1px solid #DBEAFE;
     }
-    .admin-sidebar.collapsed .sidebar-user-block { padding: 8px; justify-content: center; margin: 12px 8px 6px; }
+    .admin-sidebar.collapsed .sidebar-user-block {
+        padding: 0;
+        background: transparent;
+        border: none;
+        justify-content: center;
+        margin: 20px 0 10px;
+        box-shadow: none;
+        gap: 0;
+    }
+    .admin-sidebar.collapsed .sidebar-user-info { display: none; }
 
     .sidebar-user-avatar {
         width: 36px;
@@ -232,14 +244,16 @@
     .sidebar-item.active::before {
         content: '';
         position: absolute;
-        left: 0;
+        left: -12px;
         top: 50%;
         transform: translateY(-50%);
-        width: 3px;
+        width: 3.5px;
         height: 55%;
         background: var(--primary);
-        border-radius: 0 3px 3px 0;
+        border-radius: 0 4px 4px 0;
+        transition: all 0.2s;
     }
+    .admin-sidebar.collapsed .sidebar-item.active::before { left: -12px; height: 60%; }
     .sidebar-item i { font-size: 17px; min-width: 20px; text-align: center; flex-shrink: 0; color: var(--text-muted); transition: color 0.2s; }
     .sidebar-item-text { opacity: 1; transition: opacity var(--transition); overflow: hidden; }
     .admin-sidebar.collapsed .sidebar-item-text { opacity: 0; width: 0; pointer-events: none; }
@@ -663,6 +677,14 @@
             <span class="sidebar-item-text">Kategori</span>
         </a>
 
+        <a href="{{ route('admin.tanggapan-pengguna.index') }}"
+            data-tooltip="Tanggapan Pengguna"
+            data-page-title="Tanggapan Pengguna"
+            class="sidebar-item {{ request()->routeIs('admin.tanggapan-pengguna.*') ? 'active' : '' }}">
+            <i class="bi bi-chat-left-quote-fill"></i>
+            <span class="sidebar-item-text">Tanggapan Pengguna</span>
+        </a>
+
         {{-- Pengguna Dropdown --}}
         @php
             $penggunaActive = request()->routeIs('admin.pengguna.*');
@@ -740,6 +762,7 @@
                 elseif (request()->routeIs('admin.pengguna.siswa.*')) $pageTitle = 'Pengguna - Siswa';
                 elseif (request()->routeIs('admin.pengguna.pegawai.*')) $pageTitle = 'Pengguna - Pegawai';
                 elseif (request()->routeIs('admin.pengguna.guru.*')) $pageTitle = 'Pengguna - Guru';
+                elseif (request()->routeIs('admin.tanggapan-pengguna.*')) $pageTitle = 'Tanggapan Pengguna';
                 elseif (request()->routeIs('admin.akun')) $pageTitle = 'Profile Setting';
             @endphp
             {{ $pageTitle }}
@@ -812,35 +835,43 @@ function toggleDropdown(e, menuId, arrowId) {
         });
     });
 
-    function setCollapsed(collapsed) {
+    const setCollapsed = (collapsed) => {
         sidebar.classList.toggle('collapsed', collapsed);
         document.body.classList.toggle('sidebar-collapsed', collapsed);
-        topbar.style.left = collapsed ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)';
-        content.style.marginLeft = collapsed ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)';
         localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0');
-    }
+    };
 
-    if (isDesktop() && localStorage.getItem(STORAGE_KEY) === '1') setCollapsed(true);
+    const toggleSidebar = () => {
+        setCollapsed(!sidebar.classList.contains('collapsed'));
+    };
 
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', function() {
-            if (isDesktop()) setCollapsed(!sidebar.classList.contains('collapsed'));
-        });
-    }
+    // Brand icon click (untuk toggle saat collapsed)
+    document.querySelector('.sidebar-brand-icon').addEventListener('click', () => {
+        if (sidebar.classList.contains('collapsed')) toggleSidebar();
+    });
 
-    function openMobile()  { sidebar.classList.add('mobile-open'); overlay.classList.add('open'); }
-    function closeMobile() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('open'); }
+    if (toggleBtn) toggleBtn.addEventListener('click', toggleSidebar);
+    if (mobileToggle) mobileToggle.addEventListener('click', () => {
+        sidebar.classList.add('mobile-open');
+        overlay.classList.add('open');
+    });
 
-    if (mobileToggle) mobileToggle.addEventListener('click', openMobile);
+    const closeMobile = () => {
+        sidebar.classList.remove('mobile-open');
+        overlay.classList.remove('open');
+    };
+
     if (overlay) overlay.addEventListener('click', closeMobile);
+
+    // Initial State
+    if (isDesktop() && localStorage.getItem(STORAGE_KEY) === '1') {
+        setCollapsed(true);
+    }
 
     window.addEventListener('resize', function() {
         if (isDesktop()) {
             closeMobile();
             setCollapsed(localStorage.getItem(STORAGE_KEY) === '1');
-        } else {
-            topbar.style.left = '';
-            content.style.marginLeft = '';
         }
     });
 })();

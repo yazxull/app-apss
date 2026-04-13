@@ -230,12 +230,8 @@
                                 {{ $laporan->firstItem() + $i }}
                             </td>
                             <td>
-                                @if($item->is_anonim)
-                                    <span class="badge-anonim"><i class="bi bi-incognito me-1"></i>Anonim</span>
-                                @else
-                                    <div style="font-weight:600;font-size:13px;">{{ $item->reporter->nama ?? '-' }}</div>
-                                    <div style="font-size:11px;color:var(--text-muted);">{{ ucfirst(class_basename($item->reporter_type)) }}</div>
-                                @endif
+                                <div style="font-weight:600;font-size:13px;">{{ $item->reporter->nama ?? '-' }}</div>
+                                <div style="font-size:11px;color:var(--text-muted);">{{ ucfirst(class_basename($item->reporter_type)) }}</div>
                             </td>
                             <td style="max-width:220px;">
                                 <div style="font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">

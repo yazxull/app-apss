@@ -13,13 +13,22 @@
         <span>Daftar Laporan & Aspirasi</span>
         <div class="ms-auto d-flex gap-2 flex-wrap">
             <form method="GET" action="{{ route('admin.laporan.index') }}" class="d-flex gap-2">
-                <select name="status" class="form-select form-select-sm" style="width:180px;" onchange="this.form.submit()">
+                {{-- Filter Peran --}}
+                <select name="role" class="form-select form-select-sm" style="width:180px;" onchange="this.form.submit()">
+                    <option value="">Semua Peran</option>
+                    <option value="guru" {{ request('role') === 'guru' ? 'selected' : '' }}>Laporan Guru</option>
+                    <option value="pegawai" {{ request('role') === 'pegawai' ? 'selected' : '' }}>Laporan Pegawai</option>
+                    <option value="siswa" {{ request('role') === 'siswa' ? 'selected' : '' }}>Laporan Siswa</option>
+                </select>
+
+                {{-- Filter Status --}}
+                <select name="status" class="form-select status-select form-select-sm" style="width:180px;" onchange="this.form.submit()">
                     <option value="">Semua Status</option>
                     <option value="belum" {{ request('status') === 'belum' ? 'selected' : '' }}>Belum Diproses</option>
                     <option value="proses" {{ request('status') === 'proses' ? 'selected' : '' }}>Proses</option>
                     <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
                 </select>
-                @if(request('status'))
+                @if(request('status') || request('role'))
                     <a href="{{ route('admin.laporan.index') }}" class="btn btn-sm btn-secondary">Reset</a>
                 @endif
             </form>

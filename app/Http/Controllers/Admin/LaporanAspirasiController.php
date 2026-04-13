@@ -34,6 +34,17 @@ class LaporanAspirasiController extends Controller
             }
         }
 
+        // Logika Filter Peran
+        if ($request->filled('role')) {
+            if ($request->role === 'siswa') {
+                $query->whereNotNull('siswa_id');
+            } elseif ($request->role === 'guru') {
+                $query->where('reporter_type', 'guru');
+            } elseif ($request->role === 'pegawai') {
+                $query->where('reporter_type', 'pegawai');
+            }
+        }
+
         // Paginasi dengan mempertahankan query string filter
         $laporan = $query->paginate(10)->withQueryString();
 
